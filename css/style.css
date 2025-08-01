@@ -1,320 +1,164 @@
-/*
- * Main stylesheet for the static version of Ripa Elevate Academy.
- *
- * This file defines the color palette, typography, and layout rules to
- * approximate the look and feel of the original WordPress block theme.
- */
-
-:root {
-  /*
-   * Updated color palette
-   *
-   * The previous version of this site used royal blue and soft gold.
-   * To give the site a more mature, professional feel while keeping it
-   * inviting for families, we've switched to a deep teal primary,
-   * warm gold secondary, a soft orange accent and a fresh forest green
-   * highlight.  A light beige background ties everything together.
-   */
-  --primary-color: #0D3B66;    /* deep teal blue for headings, nav and CTA */
-  --secondary-color: #F0A202;  /* warm gold for secondary elements */
-  --accent-color: #F28F3B;     /* soft orange for buttons and highlights */
-  --highlight-color: #40916C;  /* forest green for subtle accents */
-  --bg-color: #F5F5F0;        /* offâ€‘white background */
-  --text-color: #1a1a1a;
-  --card-bg: #ffffff;
-  --card-shadow: rgba(0, 0, 0, 0.08);
-}
-
-html, body {
+/* Global Settings */
+* {
   margin: 0;
   padding: 0;
-  font-family: 'Lato', sans-serif;
-  background-color: var(--bg-color);
-  color: var(--text-color);
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
   line-height: 1.6;
 }
 
-h1, h2, h3, h4 {
-  font-family: 'Poppins', sans-serif;
-  margin-top: 0;
-  color: var(--primary-color);
-}
-
-a {
-  color: var(--primary-color);
-  text-decoration: none;
-}
-a:hover {
-  color: var(--accent-color);
-}
-
+/* Header */
 header {
-  background-color: var(--primary-color);
-  color: #fff;
+  background-color: #ffffff;
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
-header .logo {
+
+.logo a {
   font-size: 1.5rem;
   font-weight: 700;
-}
-header .logo a {
-  color: #fff;
-}
-header nav {
-  display: flex;
-  flex-wrap: wrap;
-}
-header nav a {
-  color: #fff;
-  margin-left: 1rem;
-  font-weight: 600;
-}
-header nav a:hover {
-  color: var(--accent-color);
-}
-
-.hero {
-  position: relative;
-  /* Use the real photo of a tutoring session as the hero background */
-  background-image: url('../images/hero-real.jpg');
-  background-size: cover;
-  background-position: center;
-  color: #fff;
-  padding: 5rem 2rem;
-  text-align: center;
-  overflow: hidden;
-}
-.hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  /* Adjusted overlay to work with the new deep teal palette */
-  background: rgba(13, 59, 102, 0.55);
-  z-index: 1;
-}
-.hero > * {
-  position: relative;
-  z-index: 2;
-}
-.hero h1 {
-  font-size: 3rem;
-  margin-bottom: 0.5rem;
-  color: #fff;
-}
-.hero p {
-  font-size: 1.4rem;
-  margin-bottom: 1.5rem;
-  color: #fff;
-}
-.btn {
-  display: inline-block;
-  padding: 0.7rem 1.4rem;
-  border-radius: 4px;
+  color: #F28F3B;
   text-decoration: none;
-  font-weight: 600;
-  margin: 0.3rem;
-  transition: background-color 0.2s ease;
-}
-.btn-primary {
-  background-color: var(--accent-color);
-  /* When using the new palette, dark text on light orange provides contrast */
-  color: var(--primary-color);
-}
-.btn-primary:hover {
-  /* Darken the accent on hover */
-  background-color: #D57828;
-}
-.btn-secondary {
-  background-color: #ffffff;
-  color: var(--primary-color);
-  border: 2px solid var(--primary-color);
-}
-.btn-secondary:hover {
-  background-color: var(--primary-color);
-  color: #fff;
 }
 
-.section {
-  padding: 3rem 2rem;
-  max-width: 1100px;
-  margin: 0 auto;
+nav a {
+  margin-left: 1.5rem;
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
 }
+
+nav a:hover {
+  color: #F28F3B;
+}
+
+/* Section Layout */
+.section {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem;
+}
+
 .section h2 {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 1.2rem;
+  color: #222;
+}
+
+.section p {
+  font-size: 1.1rem;
   text-align: center;
   margin-bottom: 2rem;
+  color: #555;
 }
 
+/* Cards */
 .cards {
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
   justify-content: center;
 }
+
 .card {
-  background-color: var(--card-bg);
-  box-shadow: 0 2px 6px var(--card-shadow);
-  border-radius: 8px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   padding: 1.5rem;
-  flex: 1 1 300px;
-  max-width: 350px;
-}
-.card h3 {
-  margin-top: 0;
-  color: var(--primary-color);
-  margin-bottom: 0.5rem;
-}
-
-/* Apply alternate background colors to cards for extra visual interest */
-.cards.colorful .card:nth-child(odd) {
-  background-color: var(--secondary-color);
-  color: #ffffff;
-}
-.cards.colorful .card:nth-child(even) {
-  background-color: var(--accent-color);
-  color: var(--primary-color);
-}
-.cards.colorful .card:nth-child(odd) h3,
-.cards.colorful .card:nth-child(odd) p {
-  color: #ffffff;
-}
-.cards.colorful .card:nth-child(even) h3,
-.cards.colorful .card:nth-child(even) p {
-  color: var(--primary-color);
-}
-
-/* Callâ€‘toâ€‘action highlight section */
-#cta {
-  background-color: var(--secondary-color);
-  color: var(--primary-color);
+  max-width: 280px;
+  flex: 1;
   text-align: center;
-  padding: 3rem 2rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-#cta h2 {
-  color: var(--primary-color);
-  margin-bottom: 1rem;
+
+.card h3 {
+  font-size: 1.3rem;
+  color: #333;
+  margin-bottom: 0.75rem;
 }
-#cta p {
-  color: var(--primary-color);
-  margin-bottom: 1.5rem;
-}
-#cta .btn-primary {
-  background-color: var(--primary-color);
-  color: #ffffff;
-  border: none;
-}
-#cta .btn-primary:hover {
-  background-color: #09284e;
-  color: #fff;
-}
-/* Simple icon styling using emojis */
-.icon {
-  margin-right: 0.4rem;
-}
+
 .card p {
-  margin-bottom: 0;
+  font-size: 1rem;
+  color: #666;
 }
 
-.pricing .card {
-  border-top: 4px solid var(--primary-color);
-  position: relative;
-}
-.pricing .price {
-  font-size: 2rem;
-  color: var(--primary-color);
-  margin-bottom: 0.5rem;
-}
-.pricing ul {
-  list-style: none;
-  padding-left: 0;
-}
-.pricing li {
-  margin-bottom: 0.5rem;
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
 }
 
+.colorful .card {
+  background: #fdf6f0;
+  border-left: 6px solid #F28F3B;
+}
+
+/* Form */
 form {
   display: flex;
   flex-direction: column;
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
 }
+
 form label {
   margin-top: 1rem;
+  margin-bottom: 0.5rem;
   font-weight: 600;
-  color: var(--primary-color);
 }
-form input,
-form textarea {
-  padding: 0.6rem;
+
+form input, form textarea {
+  padding: 0.75rem;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 1rem;
 }
+
 form textarea {
+  resize: vertical;
   min-height: 120px;
 }
+
 form button {
   margin-top: 1.5rem;
-  padding: 0.7rem;
+  padding: 0.8rem;
+  background-color: #F28F3B;
   border: none;
-  border-radius: 4px;
-  background-color: var(--primary-color);
-  color: #fff;
-  font-weight: 600;
+  color: white;
+  font-size: 1rem;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
+
 form button:hover {
-  /* Darker shade of the primary color for button hover */
-  background-color: #09284e;
+  background-color: #e07c2d;
 }
 
+/* Footer */
 footer {
-  background-color: var(--primary-color);
-  color: #fff;
+  background-color: #fff;
   text-align: center;
-  padding: 1rem;
-  font-size: 0.9rem;
+  padding: 1.5rem 1rem;
+  margin-top: 3rem;
+  border-top: 1px solid #eaeaea;
+  font-size: 0.95rem;
+  color: #666;
 }
 
-/* Alternative background for adding more color to selected sections */
-.alt-bg {
-  /* Use the highlight color for sections that need contrast against the beige background */
-  background-color: var(--highlight-color);
-  color: #ffffff;
-}
-.alt-bg h2 {
-  color: #ffffff;
-}
-.alt-bg p {
-  color: #ffffff;
-}
-
-/* Footer contact details */
-.footer-contact {
-  margin-top: 0.5rem;
-  font-size: 0.85rem;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .hero h1 {
-    font-size: 2.2rem;
-  }
-  .hero p {
-    font-size: 1.1rem;
-  }
-  header nav a {
-    margin-left: 0.5rem;
-    font-size: 0.9rem;
-  }
-  .cards {
-    flex-direction: column;
-    align-items: stretch;
-  }
+.footer-contact a {
+  text-decoration: none;
+  font-weight: 600;
 }
