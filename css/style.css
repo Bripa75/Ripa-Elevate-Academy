@@ -7,14 +7,14 @@
 
 body {
   font-family: 'Poppins', sans-serif;
-  background-color: #f8f9fa;
-  color: #333;
+  background-color: #E4EDF4;
+  color: #2D3E50;
   line-height: 1.6;
 }
 
 /* Header */
 header {
-  background-color: #ffffff;
+  background-color: #1E2A38;
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
@@ -34,14 +34,14 @@ header {
 
 nav a {
   margin-left: 1.5rem;
-  color: #333;
+  color: #E4EDF4;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease;
 }
 
 nav a:hover {
-  color: #F28F3B;
+  color: #89CFF0;
 }
 
 /* Section Layout */
@@ -55,14 +55,14 @@ nav a:hover {
   font-size: 2rem;
   text-align: center;
   margin-bottom: 1.2rem;
-  color: #222;
+  color: #1E2A38;
 }
 
 .section p {
   font-size: 1.1rem;
   text-align: center;
   margin-bottom: 2rem;
-  color: #555;
+  color: #333;
 }
 
 /* Cards */
@@ -74,7 +74,7 @@ nav a:hover {
 }
 
 .card {
-  background: #fff;
+  background: #F5F9FC;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   padding: 1.5rem;
@@ -86,13 +86,13 @@ nav a:hover {
 
 .card h3 {
   font-size: 1.3rem;
-  color: #333;
+  color: #2D3E50;
   margin-bottom: 0.75rem;
 }
 
 .card p {
   font-size: 1rem;
-  color: #666;
+  color: #444;
 }
 
 .card:hover {
@@ -101,7 +101,7 @@ nav a:hover {
 }
 
 .colorful .card {
-  background: #fdf6f0;
+  background: #FFF3EB;
   border-left: 6px solid #F28F3B;
 }
 
@@ -119,9 +119,10 @@ form label {
   font-weight: 600;
 }
 
-form input, form textarea {
+form input,
+form textarea {
   padding: 0.75rem;
-  border: 1px solid #ccc;
+  border: 1px solid #bbb;
   border-radius: 8px;
   font-size: 1rem;
 }
@@ -136,7 +137,7 @@ form button {
   padding: 0.8rem;
   background-color: #F28F3B;
   border: none;
-  color: white;
+  color: #fff;
   font-size: 1rem;
   border-radius: 8px;
   cursor: pointer;
@@ -149,18 +150,19 @@ form button:hover {
 
 /* Footer */
 footer {
-  background-color: #fff;
+  background-color: #1E2A38;
   text-align: center;
   padding: 1.5rem 1rem;
   margin-top: 3rem;
-  border-top: 1px solid #eaeaea;
+  border-top: 1px solid #33475b;
   font-size: 0.95rem;
-  color: #666;
+  color: #ddd;
 }
 
 .footer-contact a {
   text-decoration: none;
   font-weight: 600;
+  color: #F28F3B;
 }
 
 /* Navigation Styling */
@@ -179,7 +181,7 @@ nav ul li {
 
 nav ul li a {
   text-decoration: none;
-  color: #333;
+  color: #E4EDF4;
   font-weight: 600;
   padding: 8px 12px;
   border-radius: 4px;
@@ -188,7 +190,8 @@ nav ul li a {
 
 nav ul li a:hover,
 nav ul li a.active {
-  background-color: #f0f0f0;
-  color: #000;
+  background-color: #33475b;
+  color: #fff;
 }
+
 
