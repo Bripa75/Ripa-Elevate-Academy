@@ -545,3 +545,8 @@ iframe {
   display: inline-block;
   margin-bottom: 1rem;
 }
+
+/* ✅ Anchor fix for sticky header */
+#about {
+  scroll-margin-top: 100px;
+}
