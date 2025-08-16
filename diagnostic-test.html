@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Free Diagnostic — Math & ELA (Demo)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="description" content="A simple demo diagnostic for Math & ELA with instant report.">
+<style>
+  :root{
+    --bg:#070a12; --text:#eef2fb; --muted:#b7c0d9;
+    --glass:rgba(255,255,255,.06); --stroke:rgba(255,255,255,.12);
+    --a:#67e8f9; --b:#a78bfa; --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif}
+  a{color:inherit;text-decoration:none}
+  .container{width:min(1100px,92%);margin:0 auto}
+  header{position:sticky;top:0;z-index:10;background:linear-gradient(180deg, rgba(7,10,18,.9), rgba(7,10,18,.55));backdrop-filter:blur(10px);border-bottom:1px solid var(--stroke)}
+  header .row{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+  .brand{display:flex;align-items:center;gap:8px;font-weight:700}
+  .orb{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--b));box-shadow:0 0 22px rgba(103,232,249,.5)}
+  main{padding:24px 0 60px}
+  .stage{background:var(--glass);border:1px solid var(--stroke);border-radius:18px;padding:18px;display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+  .card{background:var(--glass);border:1px solid var(--stroke);border-radius:var(--radius);padding:16px}
+  .title{font-weight:700;font-size:22px;margin:0 0 6px}
+  .muted{color:var(--muted);font-size:14px;margin:0 0 12px}
+  .qtext{font-size:18px;margin:0 0 10px}
+  .choices{display:grid;gap:10px}
+  .choices button{padding:12px 14px;border-radius:12px;border:1px solid var(--stroke);background:rgba(255,255,255,.04);color:var(--text);text-align:left;font-weight:600;cursor:pointer}
+  .choices button:hover{background:rgba(255,255,255,.08)}
+  .bar{height:10px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden}
+  .fill{height:100%;width:0%;background:linear-gradient(90deg,var(--a),var(--b));transition:width .35s ease}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .kpi{background:var(--glass);border:1px solid var(--stroke);border-radius:12px;padding:12px;text-align:center}
+  .kpi .num{font-size:22px;font-weight:700}
+  .pill{display:inline-block;padding:6px 10px;border:1px solid var(--stroke);border-radius:999px;background:rgba(255,255,255,.06);font-size:12px;margin:4px 6px 0 0}
+  .cta{display:flex;gap:10px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 16px;border:1px solid var(--stroke);border-radius:12px;background:linear-gradient(135deg, rgba(103,232,249,.15), rgba(167,139,250,.15));font-weight:700;cursor:pointer}
+  .btn.secondary{background:rgba(255,255,255,.06)}
+  .center{text-align:center}
+  @media (max-width: 900px){ .stage{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <div class="row">
+      <div class="brand"><span class="orb"></span> Ripa Elevate Academy</div>
+      <div class="cta">
+        <a class="btn secondary" href="diagnostic.html">← Back</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <div class="stage" id="app" role="region" aria-live="polite">
+    <!-- Left: question panel -->
+    <div class="card">
+      <div class="row">
+        <div>
+          <div class="title" id="sectionTitle">Math — Question 1</div>
+          <p class="muted" id="sectionHint">We’ll adjust difficulty as you go. Try your best!</p>
+        </div>
+        <div style="min-width:170px">
+          <div class="muted center" id="progressText">1 / 10</div>
+          <div class="bar" aria-label="Progress"><div class="fill" id="progressFill"></div></div>
+        </div>
+      </div>
+      <h3 class="qtext" id="qtext">Loading…</h3>
+      <div class="choices" id="choices"></div>
+    </div>
+
+    <!-- Right: live indicators / mini-report -->
+    <div class="card">
+      <div class="title">Live Indicators</div>
+      <p class="muted">These update as answers come in.</p>
+      <div class="kpis">
+        <div class="kpi">
+          <div class="muted">Estimated Level</div>
+          <div class="num" id="estLevel">4.0</div>
+        </div>
+        <div class="kpi">
+          <div class="muted">Confidence</div>
+          <div class="num" id="confidence">—</div>
+        </div>
+        <div class="kpi">
+          <div class="muted">Domain</div>
+          <div class="num" id="domainNow">Math</div>
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <div class="muted">Strength signals</div>
+        <div id="strengths"></div>
+      </div>
+      <div style="margin-top:8px">
+        <div class="muted">Priority signals</div>
+        <div id="needs"></div>
+      </div>
+      <div class="cta" style="margin-top:14px">
+        <button class="btn secondary" id="pauseBtn" type="button">Pause</button>
+        <button class="btn" id="finishBtn" type="button">Finish now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Report -->
+  <div class="card" id="report" style="display:none;margin-top:16px">
+    <div class="row">
+      <div class="title">Instant Report (Demo)</div>
+      <div class="cta">
+        <button class="btn" onclick="window.print()">Download as PDF</button>
+        <a class="btn secondary" href="diagnostic.html">Back to overview</a>
+      </div>
+    </div>
+    <p class="muted">This demo estimates level by domain, shows confidence, and recommends next steps.</p>
+    <div class="kpis">
+      <div class="kpi"><div class="muted">Math level</div><div class="num" id="mathLevel">—</div></div>
+      <div class="kpi"><div class="muted">ELA level</div><div class="num" id="elaLevel">—</div></div>
+      <div class="kpi"><div class="muted">Overall confidence</div><div class="num" id="confOut">—</div></div>
+    </div>
+    <div style="margin-top:12px">
+      <div class="muted">Strengths</div><div id="strengthList"></div>
+    </div>
+    <div style="margin-top:8px">
+      <div class="muted">Priorities</div><div id="needList"></div>
+    </div>
+    <div style="margin-top:12px">
+      <div class="muted">Action plan</div>
+      <ul style="margin-top:6px">
+        <li id="plan1">2-week: 10–15 mins/day targeted practice in priority areas.</li>
+        <li id="plan2">4-week: Reassess with mini-check (10 mins) and adjust level.</li>
+      </ul>
+    </div>
+  </div>
+</main>
+
+<script>
+/* ---------------------------
+   Simple demo engine (no libs)
+   --------------------------- */
+
+const mathBank = [
+  // level 3–6ish math, tags: arithmetic, fractions, geometry, word
+  {t:'What is 7 × 6?', c:'42', a:['36','42','48','56'], tag:'arithmetic', lvl:4},
+  {t:'Solve: 45 ÷ 9 = ?', c:'5', a:['4','5','6','9'], tag:'arithmetic', lvl:4},
+  {t:'Which fraction is equal to 1/2?', c:'2/4', a:['1/3','2/5','2/4','3/5'], tag:'fractions', lvl:5},
+  {t:'Which is larger?', c:'3/4', a:['2/3','3/4'], tag:'fractions', lvl:5},
+  {t:'Area of rectangle 8 by 3?', c:'24', a:['11','18','24','32'], tag:'geometry', lvl:5},
+  {t:'A box has 12 apples. You eat 3. What fraction remains?', c:'3/4', a:['1/4','2/3','3/4','4/5'], tag:'word', lvl:4},
+  {t:'Perimeter of a rectangle 5 by 4?', c:'18', a:['9','18','20','22'], tag:'geometry', lvl:5}
+];
+
+const elaBank = [
+  // short comprehension + grammar, tags: mainidea, vocab, inference, grammar
+  {t:'Read: "The clouds gathered and the wind howled. Soon, droplets tapped the window." What is most likely happening?', c:'A storm is starting', a:['A sunny day','A storm is starting','A parade','A quiet night'], tag:'inference', lvl:5},
+  {t:'Choose the best synonym for "eager".', c:'Excited', a:['Tired','Excited','Confused','Quiet'], tag:'vocab', lvl:4},
+  {t:'Which sentence is punctuated correctly?', c:'Yes, I can help you.', a:['Yes I can help you.','Yes, I can help you.','Yes I can help, you.','Yes I, can help you.'], tag:'grammar', lvl:4},
+  {t:'Main idea: "Many plants grow toward light. Gardeners rotate pots so stems stay straight." The main idea is…', c:'Plants grow toward light', a:['Plants hate water','Plants grow toward light','Pots are heavy','Stems are weak'], tag:'mainidea', lvl:4},
+  {t:'"Their / There / They\'re": Choose the correct word — "___ bringing ___ books over ___."', c:"They're, their, there", a:["There, they're, their","Their, there, they're","They're, their, there","They're, there, their"], tag:'grammar', lvl:5},
+  {t:'Which word best completes: "She spoke in a ___ voice so she wouldn’t wake the baby."', c:'soft', a:['soft','loud','angry','rapid'], tag:'vocab', lvl:3}
+];
+
+let state = {
+  step:0, total:10, domain:'Math', // first 5 math, then 5 ELA
+  mathCorrect:0, elaCorrect:0,
+  est:4.0, // naive estimated level
+  conf:0.5, // confidence 0..1
+  strengths:new Map(), needs:new Map()
+};
+
+function shuffle(arr){ return arr.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]); }
+const mQ = shuffle(mathBank).slice(0,5);
+const eQ = shuffle(elaBank).slice(0,5);
+
+function pickQuestion(){
+  if(state.step<5){ state.domain='Math'; return mQ[state.step]; }
+  state.domain='ELA'; return eQ[state.step-5];
+}
+
+function render(){
+  const q = pickQuestion();
+  document.getElementById('domainNow').textContent = state.domain;
+  document.getElementById('progressText').textContent = (state.step+1)+' / '+state.total;
+  document.getElementById('progressFill').style.width = ((state.step)/state.total*100)+'%';
+
+  document.getElementById('sectionTitle').textContent = `${state.domain} — Question ${state.domain==='Math'?state.step+1:state.step-4}`;
+  document.getElementById('sectionHint').textContent = state.domain==='Math'
+    ? 'We’ll adjust difficulty as you go. Try your best!'
+    : 'ELA section: short comprehension, vocab, and grammar.';
+
+  document.getElementById('qtext').textContent = q.t;
+  const choices = document.getElementById('choices');
+  choices.innerHTML='';
+  const opts = shuffle(q.a.slice());
+  opts.forEach(opt=>{
+    const b = document.createElement('button');
+    b.textContent = opt;
+    b.onclick = ()=> answer(q,opt);
+    choices.appendChild(b);
+  });
+
+  document.getElementById('estLevel').textContent = state.est.toFixed(1);
+  document.getElementById('confidence').textContent = Math.round(state.conf*100)+'%';
+
+  renderTags();
+}
+
+function bump(map, key, delta){ map.set(key, (map.get(key)||0) + delta); }
+
+function answer(q,opt){
+  const correct = (opt===q.c);
+  if(correct){
+    if(state.domain==='Math') state.mathCorrect++; else state.elaCorrect++;
+    state.est = Math.min(8, state.est + (q.lvl>=state.est? 0.25:0.12));
+    state.conf = Math.min(1, state.conf + 0.06);
+    bump(state.strengths, q.tag, 1);
+  }else{
+    state.est = Math.max(1, state.est - 0.12);
+    state.conf = Math.max(0.2, state.conf - 0.04);
+    bump(state.needs, q.tag, 1);
+  }
+
+  state.step++;
+  if(state.step>=state.total){ finish(); } else { render(); }
+}
+
+function topTags(map, n=3){
+  return Array.from(map.entries()).sort((a,b)=>b[1]-a[1]).slice(0,n).map(x=>x[0]);
+}
+
+function renderTags(){
+  const sEl = document.getElementById('strengths');
+  const nEl = document.getElementById('needs');
+  sEl.innerHTML = topTags(state.strengths,4).map(t=>`<span class="pill">${t}</span>`).join('') || '<span class="muted">—</span>';
+  nEl.innerHTML = topTags(state.needs,4).map(t=>`<span class="pill">${t}</span>`).join('') || '<span class="muted">—</span>';
+}
+
+function finish(){
+  document.getElementById('progressFill').style.width = '100%';
+
+  // simple domain levels from correct counts
+  const mathLevel = 3.5 + state.mathCorrect*0.3; // rough scale
+  const elaLevel  = 3.5 + state.elaCorrect*0.3;
+
+  document.getElementById('mathLevel').textContent = mathLevel.toFixed(1);
+  document.getElementById('elaLevel').textContent  = elaLevel.toFixed(1);
+  document.getElementById('confOut').textContent   = Math.round(state.conf*100)+'%';
+
+  const strengths = topTags(state.strengths,4).map(t=>`<span class="pill">${t}</span>`).join('') || '—';
+  const needs = topTags(state.needs,4).map(t=>`<span class="pill">${t}</span>`).join('') || '—';
+  document.getElementById('strengthList').innerHTML = strengths;
+  document.getElementById('needList').innerHTML = needs;
+
+  const mainNeed = topTags(state.needs,1)[0];
+  if(mainNeed){ document.getElementById('plan1').textContent = `2-week: 10–15 mins/day focused on ${mainNeed} exercises.`; }
+
+  document.getElementById('app').style.display='none';
+  document.getElementById('report').style.display='block';
+}
+
+document.getElementById('pauseBtn').onclick = ()=> alert('Paused. (Demo) You can resume anytime.');
+document.getElementById('finishBtn').onclick = finish;
+
+render();
+</script>
+</body>
+</html>
