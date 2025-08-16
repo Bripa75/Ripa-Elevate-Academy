@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ripa Elevate Diagnostic — Futuristic Preview</title>
+  <meta name="description" content="A futuristic, adaptive diagnostic for Math & ELA. Free, private, and instant.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#070a12;
+      --text:#eef2fb;
+      --muted:#b7c0d9;
+      --glass: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.12);
+      --accentA:#67e8f9;
+      --accentB:#a78bfa;
+      --radius:18px;
+      --shadow: 0 20px 50px rgba(0,0,0,.5);
+      --glow: 0 0 60px rgba(103,232,249,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif}
+    a{color:inherit;text-decoration:none}
+    .container{width:min(1200px,92%);margin:0 auto}
+    header{position:sticky;top:0;z-index:20;backdrop-filter: blur(10px) saturate(140%);
+      background:linear-gradient(180deg, rgba(7,10,18,.85), rgba(7,10,18,.5));border-bottom:1px solid var(--stroke)}
+    header .row{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.2px}
+    .orb{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--accentA),var(--accentB));box-shadow:var(--glow)}
+    nav a{padding:10px 14px;border-radius:12px;opacity:.95;transition:.2s}
+    nav a:hover{background:var(--glass)}
+    .bg-gradient{
+      position:fixed;inset:0;z-index:-2;
+      background: radial-gradient(1200px 600px at 20% 10%, rgba(103,232,249,.12), transparent 40%),
+                  radial-gradient(1200px 600px at 80% 80%, rgba(167,139,250,.12), transparent 40%);
+      animation: floatBG 14s ease-in-out infinite alternate;
+    }
+    @keyframes floatBG{from{transform:translateY(-2%)}to{transform:translateY(2%)}}
+    canvas#fx{position:fixed;inset:0;z-index:-1;opacity:.35;pointer-events:none}
+    .hero{padding:86px 0 36px;text-align:center}
+    h1.headline{font-size: clamp(28px, 5vw, 56px);line-height:1.05;margin:0 auto 10px;width:min(980px,95%);font-weight:700}
+    .txt-grad{background:linear-gradient(90deg,var(--accentA),var(--accentB));-webkit-background-clip:text;background-clip:text;color:transparent}
+    p.sub{font-size:clamp(16px,2.2vw,20px);color:var(--muted);margin:0 auto 18px;width:min(820px,92%)}
+    .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 18px;border-radius:14px;border:1px solid var(--stroke);
+      background:var(--glass);font-weight:600;transition:transform .08s ease, box-shadow .2s ease, background .2s ease}
+    .btn.primary{background:linear-gradient(135deg, rgba(103,232,249,.18), rgba(167,139,250,.18));box-shadow:var(--glow)}
+    .btn:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(0,0,0,.35)}
+    .micro{color:var(--muted);font-size:14px;margin-top:8px}
+    .accent-bar{height:3px;width:min(640px,80%);margin:22px auto;border-radius:999px;background:linear-gradient(90deg,var(--accentA),var(--accentB));
+      position:relative;overflow:hidden;filter:blur(.2px)}
+    .accent-bar::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);
+      animation:shine 2.1s infinite linear}
+    @keyframes shine{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+    section{padding:56px 0}
+    .label{letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-size:12px}
+    .title{font-weight:700;font-size: clamp(22px, 3vw, 28px);margin:6px 0 10px}
+    .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px}
+    .card{background:var(--glass);border:1px solid var(--stroke);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);
+      position:relative;transform-style:preserve-3d;transition:transform .15s ease}
+    .card h3{margin:0 0 6px;font-size:18px}
+    .card p{margin:0;color:var(--muted)}
+    .card::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;
+      background:linear-gradient(135deg, rgba(103,232,249,.28), rgba(167,139,250,.28));
+      -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor;mask-composite:exclude}
+    .two-col{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:center;margin-top:22px}
+    .mock{background:linear-gradient(135deg, rgba(103,232,249,.12), rgba(167,139,250,.12));
+      border:1px solid rgba(103,232,249,.28);border-radius:var(--radius);padding:18px;box-shadow:var(--glow)}
+    .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .kpi{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+    .kpi .num{font-size:28px;font-weight:700}
+    .kpi .cap{color:var(--muted);font-size:13px}
+    .bar{height:10px;background:rgba(255,255,255,.12);border-radius:8px;overflow:hidden;margin-top:10px}
+    .fill{height:100%;width:66%;background:linear-gradient(90deg,var(--accentA),var(--accentB))}
+    .heat{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:10px}
+    .cell{height:18px;border-radius:6px;background:rgba(255,255,255,.14)}
+    .cell:nth-child(3n){background:rgba(103,232,249,.55)}
+    .cta{background:linear-gradient(135deg, rgba(103,232,249,.14), rgba(167,139,250,.14));border:1px solid rgba(103,232,249,.28);
+      border-radius:var(--radius);padding:22px;text-align:center;box-shadow:var(--glow)}
+    .faq{display:grid;gap:12px;margin-top:12px}
+    .q{background:var(--glass);border:1px solid var(--stroke);border-radius:14px;padding:16px}
+    .q strong{display:block;margin-bottom:6px}
+    footer{border-top:1px solid var(--stroke);color:var(--muted);padding:28px 0 50px;text-align:center}
+    .reveal{opacity:0;transform:translateY(14px);transition:.6s ease}
+    .reveal.show{opacity:1;transform:none}
+    @media (max-width: 900px){
+      .grid3{grid-template-columns:1fr}
+      .two-col{grid-template-columns:1fr}
+      h1.headline{font-size: clamp(26px, 7vw, 38px)}
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-gradient" aria-hidden="true"></div>
+  <canvas id="fx" aria-hidden="true"></canvas>
+  <header>
+    <div class="container">
+      <div class="row">
+        <div class="brand"><span class="orb"></span><span>Ripa Elevate Academy</span></div>
+        <nav>
+          <a href="/">Home</a>
+          <a href="#how">How it works</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1 class="headline">The <span class="txt-grad">Instant Learning Scan</span> for Math & ELA</h1>
+        <p class="sub">A 40-minute, adaptive checkup that pinpoints level by skill and gives you an action plan—free, private, and built for families.</p>
+        <div class="btns">
+          <a class="btn primary" href="#start">Start Free Diagnostic</a>
+          <a class="btn" href="#how">See How It Works</a>
+        </div>
+        <div class="micro">No signup. Works on laptop or iPad.</div>
+        <div class="accent-bar"></div>
+      </div>
+    </section>
+
+    <section id="how">
+      <div class="container reveal">
+        <div class="label">How it works</div>
+        <div class="title">Simple steps. Smart results.</div>
+        <div class="grid3">
+          <div class="card tilt">
+            <h3>Smart Start</h3>
+            <p>We ask a few quick questions and route your child to the right difficulty.</p>
+          </div>
+          <div class="card tilt">
+            <h3>Adaptive Checkup</h3>
+            <p>Questions get easier or harder in real time to pinpoint level and skills.</p>
+          </div>
+          <div class="card tilt">
+            <h3>Instant Results</h3>
+            <p>You get a clear report with strengths, priorities, and a short action plan.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container two-col reveal">
+        <div>
+          <div class="title">A clear report—no jargon</div>
+          <p class="micro" style="margin:0 0 10px">Preview</p>
+          <div class="row">
+            <div class="kpi">
+              <div class="num" data-count="4.3">0.0</div>
+              <div class="cap">Current level</div>
+            </div>
+            <div class="kpi">
+              <div class="num" data-count="5.0">0.0</div>
+              <div class="cap">Expected level</div>
+            </div>
+            <div class="kpi">
+              <div class="num" data-count="95">0</div>
+              <div class="cap">Confidence (%)</div>
+            </div>
+          </div>
+          <div class="bar"><div class="fill"></div></div>
+          <p class="micro">You’ll also see strengths, priorities, and a 2- & 4-week practice plan.</p>
+        </div>
+        <div class="mock" aria-hidden="true">
+          <div class="heat">
+            <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+            <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+            <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="start">
+      <div class="container reveal">
+        <div class="cta">
+          <h2 class="title" style="margin:0">Start Free Diagnostic</h2>
+          <p class="micro" style="margin:8px 0 16px">No signup required. Works on laptop or iPad.</p>
+          <a class="btn primary" href="booking.html">Begin Now</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="container reveal">
+        <div class="title">Mini-FAQ</div>
+        <div class="faq">
+          <div class="q">
+            <strong>What grades is this for?</strong>
+            <span class="micro">Grades 3–8 for the free beta, with more grades coming soon.</span>
+          </div>
+          <div class="q">
+            <strong>How long does it take?</strong>
+            <span class="micro">About 40 minutes—roughly 18 minutes for Math and 18 for English.</span>
+          </div>
+          <div class="q">
+            <strong>Is my child’s data private?</strong>
+            <span class="micro">Yes. Your results are shared only with you and your tutor. Delete anytime.</span>
+          </div>
+          <div class="q">
+            <strong>Can I talk to someone about the results?</strong>
+            <span class="micro">Absolutely—your report includes a quick link to schedule a call.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      © <span id="year"></span> Ripa Elevate Academy · Private by design
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const c = document.getElementById('fx');
+    const ctx = c.getContext('2d');
+    let w, h, particles;
+    function resize(){ w = c.width = innerWidth; h = c.height = innerHeight; make(); }
+    function make(){
+      particles = Array.from({length: 80}, () => ({
+        x: Math.random()*w,
+        y: Math.random()*h,
+        r: Math.random()*1.8+0.6,
+        vx: (Math.random()-.5)*0.25,
+        vy: (Math.random()-.5)*0.25
+      }));
+    }
+    function step(){
+      ctx.clearRect(0,0,w,h);
+      ctx.fillStyle = 'rgba(255,255,255,.7)';
+      for(const p of particles){
+        p.x += p.vx; p.y += p.vy;
+        if(p.x<0||p.x>w) p.vx*=-1;
+        if(p.y<0||p.y>h) p.vy*=-1;
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+      }
+      requestAnimationFrame(step);
+    }
+    addEventListener('resize', resize);
+    resize(); step();
+
+    const tilts = document.querySelectorAll('.tilt');
+    tilts.forEach(card => {
+      card.addEventListener('mousemove', (e)=>{
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left)/rect.width - .5;
+        const y = (e.clientY - rect.top)/rect.height - .5;
+        card.style.transform = `rotateX(${(-y*6).toFixed(2)}deg) rotateY(${(x*6).toFixed(2)}deg)`;
+      });
+      card.addEventListener('mouseleave', ()=> card.style.transform = '');
+    });
+
+    const obs = new IntersectionObserver((entries)=>{
+      entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('show'); obs.unobserve(e.target); } });
+    }, {threshold:.08});
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    const nums = document.querySelectorAll('.num');
+    const anim = (el, target, dur=1200, decimals=0) => {
+      const start = performance.now();
+      const from = 0;
+      const ease = t => t<.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+      function frame(now){
+        const p = Math.min(1, (now-start)/dur);
+        const v = from + (target-from)*ease(p);
+        el.textContent = Number(v).toFixed(decimals);
+        if(p<1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    };
+    const onShow = entries => {
+      entries.forEach(e => {
+        if(eHere’s the **rest of the code** — you’ll need to paste it right after the part I gave you above (so your file runs from `<!DOCTYPE html>` all the way to `</html>`).  
+
+---
+
+```html
+        if(e.isIntersecting){
+          nums.forEach(n => {
+            const val = parseFloat(n.dataset.count);
+            const dec = n.dataset.count.includes('.') ? 1 : 0;
+            anim(n, val, 1200, dec);
+          });
+          obs2.disconnect();
+        }
+      });
+    };
+    const obs2 = new IntersectionObserver(onShow, {threshold:.4});
+    obs2.observe(document.querySelector('.two-col'));
+  </script>
+</body>
+</html>
