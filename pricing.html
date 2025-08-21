@@ -5,7 +5,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pricing – Ripa Elevate Academy</title>
-  <meta name="description" content="Affordable tutoring rates for all grade levels. Transparent pricing with no hidden fees. Premium video library subscription and adaptive diagnostic available.">
+  <meta name="description" content="Transparent tutoring prices plus premium tools: unlimited adaptive diagnostics with subscription or $10 one-time access.">
+  <!-- Cache busting -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
@@ -13,7 +17,7 @@
 </head>
 <body>
   <header>
-    <div class="container">
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
       <div class="logo"><a href="index.html">Ripa Elevate Academy</a></div>
       <nav>
         <ul>
@@ -30,14 +34,28 @@
     </div>
   </header>
 
+  <!-- Future-forward banner -->
+  <section class="section" style="text-align:center;background:linear-gradient(135deg,#FFF3EB 0%,#F5F9FC 100%);border-radius:12px;margin:24px auto;max-width:1100px;padding:28px 20px;">
+    <div class="premium-badge" style="display:inline-block;background:#F28F3B;color:#fff;padding:6px 12px;border-radius:999px;font-weight:700;margin-bottom:10px;">NEW • AI-Guided Adaptive Diagnostic</div>
+    <h2 style="margin:6px 0 8px;">The Future of Tutoring Is Here</h2>
+    <p style="max-width:800px;margin:0 auto;color:#555;">
+      Real-time level estimates, confidence tracking, and instant action plans. Use it once for <strong>$10</strong>—or get <strong>unlimited access</strong> with our <strong>$25/month</strong> subscription (plus premium video lessons).
+    </p>
+    <div style="margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+      <a class="btn" href="videos.html">Subscribe $25/mo (Best Value)</a>
+      <!-- If hosted in another repo/site, replace href with absolute URL -->
+      <a class="btn" href="diagnostic-test.html">Try Once – $10</a>
+    </div>
+  </section>
+
   <section class="section pricing alt-bg">
     <h2>Pricing Plans</h2>
-    <p>All sessions are 60 minutes and personalized to each student's needs. Additional time can be arranged upon request. No contracts or hidden fees.</p>
+    <p>All sessions are 60 minutes and personalized to each student's needs. No contracts or hidden fees.</p>
 
     <div class="cards colorful">
       <div class="card">
         <h3>Elementary</h3>
-        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">Grades 2–5</p>
+        <p style="font-size:0.9rem;color:#666;margin-bottom:1rem;">Grades 3–5</p>
         <div class="price">$60/hr</div>
         <ul>
           <li>1-on-1 personalized tutoring</li>
@@ -49,19 +67,19 @@
 
       <div class="card">
         <h3>Middle School</h3>
-        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">Grades 6–8</p>
+        <p style="font-size:0.9rem;color:#666;margin-bottom:1rem;">Grades 6–8</p>
         <div class="price">$65/hr</div>
         <ul>
           <li>Core subjects and pre-algebra</li>
-          <li>Progress tracking and homework support</li>
-          <li>Study skills development</li>
-          <li>Test preparation strategies</li>
+          <li>Study skills & test strategies</li>
+          <li>Homework support</li>
+          <li>Regular progress updates</li>
         </ul>
       </div>
 
       <div class="card">
         <h3>High School</h3>
-        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">Grades 9–12</p>
+        <p style="font-size:0.9rem;color:#666;margin-bottom:1rem;">Grades 9–12</p>
         <div class="price">$75/hr</div>
         <ul>
           <li>Algebra, Geometry, Pre-Calculus</li>
@@ -73,26 +91,25 @@
 
       <div class="card">
         <h3>Specialized Exams & College</h3>
-        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">SAT, SHSAT, College Level</p>
+        <p style="font-size:0.9rem;color:#666;margin-bottom:1rem;">SAT, SHSAT, College Level</p>
         <div class="price">$85/hr</div>
         <ul>
           <li>SAT, SHSAT, State Exams preparation</li>
-          <li>College Algebra, Calculus I & II</li>
+          <li>College Algebra, Calculus I–II</li>
           <li>College Biology & Science Classes</li>
           <li>Discrete Mathematics</li>
-          <li>Custom materials and focused prep</li>
         </ul>
       </div>
 
       <div class="card">
         <h3>AI & Tech Skills Training</h3>
-        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">All Ages Welcome</p>
+        <p style="font-size:0.9rem;color:#666;margin-bottom:1rem;">All Ages Welcome</p>
         <div class="price">$90/hr</div>
         <ul>
-          <li>ChatGPT and AI tool mastery</li>
-          <li>Automation and productivity tools</li>
-          <li>Basic coding and programming</li>
-          <li>Beginner-friendly for all ages</li>
+          <li>ChatGPT & AI tool mastery</li>
+          <li>Automation and productivity</li>
+          <li>Beginner-friendly coding</li>
+          <li>Digital literacy</li>
         </ul>
       </div>
     </div>
@@ -100,12 +117,15 @@
     <h3 style="text-align:center;margin-top:3rem;color:#1E2A38;">Premium Learning Tools</h3>
     <div class="cards colorful">
       <div class="card">
+        <div style="position:relative;">
+          <span style="position:absolute;top:-10px;left:-10px;background:#22c55e;color:#fff;padding:6px 10px;border-radius:10px;font-weight:700;">Best Value</span>
+        </div>
         <h3>Monthly Subscription</h3>
         <div class="price">$25/month</div>
         <ul>
-          <li>Unlimited access to exclusive video lessons</li>
-          <li>Unlimited use of our Adaptive Diagnostic (Math & ELA)</li>
-          <li>Instant progress reports with strengths & next steps</li>
+          <li>Unlimited access to premium video lessons</li>
+          <li>Unlimited use of the Adaptive Diagnostic (Math & ELA)</li>
+          <li>Instant reports: strengths • priorities • action plan</li>
           <li>New content added regularly</li>
         </ul>
         <a href="videos.html" class="button">Subscribe Now</a>
@@ -114,9 +134,28 @@
       <div class="card">
         <h3>One-Time Diagnostic</h3>
         <div class="price">$10</div>
-        <p>Single-use adaptive diagnostic (Math & ELA). About 40 minutes.  
-        Real-time progress indicators and instant report with strengths, priority skills, and action plan.</p>
+        <p>~40 minutes. Real-time level estimates & confidence, live strengths/needs, and an instant report with a 2–4 week plan.</p>
+        <!-- If hosted elsewhere, replace href with absolute URL -->
         <a href="diagnostic-test.html" class="button">Take the Diagnostic</a>
+      </div>
+    </div>
+
+    <h3 style="text-align:center;margin-top:3rem;color:#1E2A38;">Add-On Options</h3>
+    <div class="cards colorful">
+      <div class="card">
+        <h3>Progress Report</h3>
+        <div class="price" style="font-size:1.5rem;">$20</div>
+        <p>Detailed summary of progress with personalized feedback and recommended next steps.</p>
+      </div>
+      <div class="card">
+        <h3>Weekly Homework Packet</h3>
+        <div class="price" style="font-size:1.5rem;">$15</div>
+        <p>Personalized worksheets delivered weekly to reinforce session content.</p>
+      </div>
+      <div class="card">
+        <h3>Quiz/Test Review Session</h3>
+        <div class="price" style="font-size:1.5rem;">$30</div>
+        <p>Focused 30-minute session to prepare for an upcoming quiz, test, or exam.</p>
       </div>
     </div>
   </section>
@@ -132,3 +171,4 @@
   </footer>
 </body>
 </html>
+
