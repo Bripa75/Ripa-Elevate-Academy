@@ -3,44 +3,55 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Unlock Required – Smart Diagnostic</title>
+  <title>Locked — Smart Diagnostic</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <style>
+    :root{--bg:#0e1320;--panel:rgba(255,255,255,.06);--stroke:rgba(255,255,255,.14);--text:#f3f6ff}
+    body{margin:0;min-height:100dvh;display:grid;place-items:center;background:var(--bg);color:var(--text);font-family:Poppins,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+    .card{max-width:720px;width:min(92%,720px);padding:28px;border-radius:16px;background:var(--panel);border:1px solid var(--stroke);text-align:center}
+    .btn{display:inline-block;margin:.4rem .3rem;padding:12px 18px;border-radius:12px;text-decoration:none;font-weight:600;border:1px solid var(--stroke)}
+    .primary{background:#F28F3B;color:#fff;border-color:#F28F3B}
+    .ghost{color:#fff}
+    .muted{color:#b9c2d6}
+    input{padding:.8rem 1rem;border-radius:10px;border:1px solid #2a3450;background:rgba(255,255,255,.05);color:#fff;min-width:260px}
+    form{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:.6rem}
+    .msg{margin-top:.6rem}
+    .ok{background:#e8fff1;color:#0a7a3f;border:1px solid #b5efcb;border-radius:10px;padding:.55rem .9rem;display:inline-block}
+    .err{background:#ffefef;color:#9a1a1a;border:1px solid #ffd0d0;border-radius:10px;padding:.55rem .9rem;display:inline-block}
+  </style>
 </head>
 <body>
-  <header>
-    <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
-      <div class="logo"><a href="index.html">Ripa Elevate Academy</a></div>
-      <nav>
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="pricing.html">Pricing</a></li>
-          <li><a href="resources.html">Resources</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+  <div class="card">
+    <h2>Smart Diagnostic is Locked</h2>
+    <p class="muted">Get instant placement, strengths & gaps, and a custom study plan. Unlock below:</p>
 
-  <main class="section" style="text-align:center;max-width:900px;margin:0 auto;">
-    <h2>Unlock the Smart Diagnostic</h2>
-    <p>This page is protected. To access the diagnostic, choose one of the options below:</p>
-    <div style="margin-top:16px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-      <!-- REPLACE the hrefs with your Stripe Payment Links -->
-      <a class="btn" href="https://buy.stripe.com/YOUR_ONETIME_PAYMENT_LINK" target="_blank" rel="noopener">
-        One-Time Diagnostic – $10
-      </a>
-      <a class="btn" href="https://buy.stripe.com/YOUR_SUBSCRIPTION_PAYMENT_LINK" target="_blank" rel="noopener">
-        Subscribe $25/mo (Unlimited)
-      </a>
+    <div style="margin:.6rem 0 1rem">
+      <a class="btn primary" href="zelle.html">Pay with Zelle & Unlock</a>
+      <a class="btn ghost" href="contact.html">Contact Brian</a>
     </div>
-    <p style="margin-top:12px;color:#666;">After payment, you’ll be redirected automatically and your access will be unlocked.</p>
-  </main>
 
-  <footer>
-    <div class="container">
-      <p>&copy; 2025 Ripa Elevate Academy. All rights reserved.</p>
-    </div>
-  </footer>
+    <p class="muted" style="margin-top:1rem">Already paid? Enter your unlock code:</p>
+    <form id="unlockForm">
+      <input id="codeInput" type="text" placeholder="Enter unlock code" required />
+      <button class="btn primary" type="submit">Unlock</button>
+    </form>
+    <div class="msg" id="msg"></div>
+  </div>
+
+  <script src="js/paywall.js?v=2"></script>
+  <script>
+    const VALID_CODES = ['ELEVATE10','ELEVATE25']; // same codes as zelle.html
+    const form = document.getElementById('unlockForm');
+    const msg = document.getElementById('msg');
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const ok = window.tryUnlockWithCode(document.getElementById('codeInput').value, VALID_CODES);
+      msg.innerHTML = ok ? '<span class="ok">Access granted. Opening diagnostic…</span>' :
+                           '<span class="err">Code not recognized. Try again.</span>';
+      if (ok) setTimeout(()=> location.href='diagnostic-test.html?access=diag', 600);
+    });
+  </script>
 </body>
 </html>
+
