@@ -1,575 +1,583 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Ripa Elevate — Adaptive Diagnostic (Demo)</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-<meta name="robots" content="noindex">
-<style>
-:root{
-  --bg:#070a12; --text:#eef2fb; --muted:#b7c0d9;
-  --glass:rgba(255,255,255,.06); --stroke:rgba(255,255,255,.12);
-  --accentA:#67e8f9; --accentB:#a78bfa; --glow:0 0 60px rgba(103,232,249,.35);
-  --radius:18px;
-}
-*{box-sizing:border-box}
-html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:Poppins,system-ui,Segoe UI,Roboto,Arial,sans-serif}
-a{color:inherit;text-decoration:none}
-.container{width:min(1100px,92%);margin:0 auto}
-header{position:sticky;top:0;z-index:20;backdrop-filter:blur(10px) saturate(140%);
-  background:linear-gradient(180deg, rgba(7,10,18,.85), rgba(7,10,18,.5));border-bottom:1px solid var(--stroke)}
-header .row{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
-.brand{display:flex;align-items:center;gap:10px;font-weight:700}
-.orb{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--accentA),var(--accentB));box-shadow:var(--glow)}
-nav a{padding:10px 12px;border-radius:12px}
-.hero{padding:70px 0 20px;text-align:center}
-h1{font-size:clamp(28px,5vw,52px);margin:0 0 10px}
-.txt-grad{background:linear-gradient(90deg,var(--accentA),var(--accentB));-webkit-background-clip:text;background-clip:text;color:transparent}
-.sub{color:var(--muted);margin:0 auto 16px;width:min(800px,92%)}
-.btn{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:14px;border:1px solid var(--stroke);
-  background:var(--glass);font-weight:600;cursor:pointer}
-.btn.primary{background:linear-gradient(135deg, rgba(103,232,249,.18), rgba(167,139,250,.18));box-shadow:var(--glow)}
-section{padding:40px 0}
-.stage{background:var(--glass);border:1px solid var(--stroke);border-radius:18px;padding:18px;display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
-.card{background:var(--glass);border:1px solid var(--stroke);border-radius:18px;padding:16px}
-.qtext{font-size:18px;margin:8px 0 12px}
-.choices{display:grid;gap:10px}
-.choices button{padding:12px 14px;border-radius:12px;border:1px solid var(--stroke);background:rgba(255,255,255,.05);color:var(--text);text-align:left;font-weight:600;cursor:pointer}
-.choices button:hover{background:rgba(255,255,255,.09)}
-.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.kpi{background:var(--glass);border:1px solid var(--stroke);border-radius:12px;padding:10px;text-align:center}
-.kpi .cap{color:var(--muted);font-size:12px}
-.kpi .num{font-weight:700;font-size:20px}
-.progBar{height:10px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden}
-.progFill{height:100%;width:0%;background:linear-gradient(90deg,var(--accentA),var(--accentB));transition:width .35s ease}
-.pills{display:flex;flex-wrap:wrap;gap:8px}
-.pill{padding:6px 10px;border:1px solid var(--stroke);border-radius:999px;background:rgba(255,255,255,.05);font-size:12px}
-h3{margin:0 0 8px}
-.reportGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.small{color:var(--muted);font-size:13px}
-footer{border-top:1px solid var(--stroke);text-align:center;color:var(--muted);padding:28px 0 60px}
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Ripa Elevate — Adaptive Diagnostic (Demo)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta name="robots" content="noindex">
 
-/* Modal */
-.modalMask{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:50}
-.modal{width:min(560px,92%);background:rgba(255,255,255,.06);border:1px solid var(--stroke);border-radius:18px;padding:18px}
-.modal h2{margin:4px 0 6px}
-.modal .row{display:flex;gap:10px;flex-wrap:wrap}
-select,input[type=number]{background:rgba(255,255,255,.08);border:1px solid var(--stroke);color:var(--text);padding:10px;border-radius:12px}
-@media(max-width:900px){.stage{grid-template-columns:1fr}}
-</style>
+  <!-- Prevent flash while we verify access -->
+  <style>
+    /* Page stays invisible unless paywall check passes and sets .pw-ok on <html> */
+    html:not(.pw-ok) body { visibility: hidden; }
+    :root{
+      --bg:#070a12; --text:#eef2fb; --muted:#b7c0d9;
+      --glass:rgba(255,255,255,.06); --stroke:rgba(255,255,255,.12);
+      --accentA:#67e8f9; --accentB:#a78bfa; --glow:0 0 60px rgba(103,232,249,.35);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:Poppins,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+    a{color:inherit;text-decoration:none}
+    .container{width:min(1100px,92%);margin:0 auto}
+    header{position:sticky;top:0;z-index:20;backdrop-filter:blur(10px) saturate(140%);
+      background:linear-gradient(180deg, rgba(7,10,18,.85), rgba(7,10,18,.5));border-bottom:1px solid var(--stroke)}
+    header .row{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:700}
+    .orb{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--accentA),var(--accentB));box-shadow:var(--glow)}
+    nav a{padding:10px 12px;border-radius:12px}
+    .hero{padding:70px 0 20px;text-align:center}
+    h1{font-size:clamp(28px,5vw,52px);margin:0 0 10px}
+    .txt-grad{background:linear-gradient(90deg,var(--accentA),var(--accentB));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .sub{color:var(--muted);margin:0 auto 16px;width:min(800px,92%)}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:14px;border:1px solid var(--stroke);
+      background:var(--glass);font-weight:600;cursor:pointer}
+    .btn.primary{background:linear-gradient(135deg, rgba(103,232,249,.18), rgba(167,139,250,.18));box-shadow:var(--glow)}
+    section{padding:40px 0}
+    .stage{background:var(--glass);border:1px solid var(--stroke);border-radius:18px;padding:18px;display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+    .card{background:var(--glass);border:1px solid var(--stroke);border-radius:18px;padding:16px}
+    .qtext{font-size:18px;margin:8px 0 12px}
+    .choices{display:grid;gap:10px}
+    .choices button{padding:12px 14px;border-radius:12px;border:1px solid var(--stroke);background:rgba(255,255,255,.05);color:var(--text);text-align:left;font-weight:600;cursor:pointer}
+    .choices button:hover{background:rgba(255,255,255,.09)}
+    .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .kpi{background:var(--glass);border:1px solid var(--stroke);border-radius:12px;padding:10px;text-align:center}
+    .kpi .cap{color:var(--muted);font-size:12px}
+    .kpi .num{font-weight:700;font-size:20px}
+    .progBar{height:10px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden}
+    .progFill{height:100%;width:0%;background:linear-gradient(90deg,var(--accentA),var(--accentB));transition:width .35s ease}
+    .pills{display:flex;flex-wrap:wrap;gap:8px}
+    .pill{padding:6px 10px;border:1px solid var(--stroke);border-radius:999px;background:rgba(255,255,255,.05);font-size:12px}
+    h3{margin:0 0 8px}
+    .reportGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .small{color:var(--muted);font-size:13px}
+    footer{border-top:1px solid var(--stroke);text-align:center;color:var(--muted);padding:28px 0 60px}
+    .modalMask{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:50}
+    .modal{width:min(560px,92%);background:rgba(255,255,255,.06);border:1px solid var(--stroke);border-radius:18px;padding:18px}
+    .modal h2{margin:4px 0 6px}
+    .modal .row{display:flex;gap:10px;flex-wrap:wrap}
+    select,input[type=number]{background:rgba(255,255,255,.08);border:1px solid var(--stroke);color:var(--text);padding:10px;border-radius:12px}
+    @media(max-width:900px){.stage{grid-template-columns:1fr}}
+  </style>
+
+  <!-- Hard paywall check (runs before render) -->
+  <script>
+    (function () {
+      try {
+        // allow if localStorage flag set OR Stripe-style callback with ?access=diag
+        var ok = localStorage.getItem('rea_diag_paid') === '1' || /\baccess=diag\b/.test(location.search);
+        if (!ok) { location.replace('lock.html'); return; }
+        // mark page safe to render
+        document.documentElement.classList.add('pw-ok');
+      } catch (e) {
+        location.replace('lock.html');
+      }
+    })();
+  </script>
 </head>
 <body>
-<script src="js/paywall.js"></script>
-<script>requireDiagAccess();</script>
-
-<header>
-  <div class="container">
-    <div class="row">
-      <div class="brand"><span class="orb"></span>Ripa Elevate Academy</div>
-      <nav>
-        <a href="/">Home</a>
-        <a href="#exam">Free Diagnostic</a>
-      </nav>
-    </div>
-  </div>
-</header>
-
-<main>
-  <section class="hero">
+  <header>
     <div class="container">
-      <h1>Instant <span class="txt-grad">Learning Scan</span> — Math & ELA</h1>
-      <p class="sub">20 adaptive questions (from a 120+ item bank) that pinpoint level, compare to grade expectations, and produce a clear action plan—fast.</p>
-      <a class="btn primary" href="#exam" id="openStart">Start Free Diagnostic</a>
-    </div>
-  </section>
-
-  <section id="exam">
-    <div class="container">
-      <div class="stage">
-        <!-- LEFT: Question -->
-        <div class="card">
-          <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px">
-            <div>
-              <div class="small" id="domainNow">Math</div>
-              <h3 id="sectionTitle" style="margin:0">Question 1</h3>
-              <div class="small" id="sectionHint">We’ll adjust difficulty as you go.</div>
-            </div>
-            <div style="min-width:180px">
-              <div class="small" id="progressText" style="text-align:center">0 / 20</div>
-              <div class="progBar"><div class="progFill" id="progressFill"></div></div>
-            </div>
-          </div>
-          <div class="qtext" id="qtext">Click “Start” to begin.</div>
-          <div class="choices" id="choices"></div>
-          <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
-            <button class="btn" id="finishNow" type="button">Finish now</button>
-            <button class="btn" id="startBtn" type="button">Start</button>
-          </div>
-        </div>
-
-        <!-- RIGHT: Live indicators -->
-        <div class="card">
-          <h3 style="margin:0 0 6px">Live Indicators</h3>
-          <div class="kpis" style="margin-bottom:10px">
-            <div class="kpi"><div class="cap">Estimated Level</div><div class="num" id="estLevel">—</div></div>
-            <div class="kpi"><div class="cap">Confidence</div><div class="num" id="confidence">—</div></div>
-            <div class="kpi"><div class="cap">Domain</div><div class="num" id="domMini">—</div></div>
-          </div>
-          <div class="small">Strength signals</div>
-          <div class="pills" id="strengths"></div>
-          <div class="small" style="margin-top:10px">Priority signals</div>
-          <div class="pills" id="needs"></div>
-        </div>
-      </div>
-
-      <!-- REPORT -->
-      <div class="card" id="report" style="display:none;margin-top:16px">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
-          <h3 style="margin:0">Instant Report</h3>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn" onclick="window.print()">Download PDF</button>
-            <a class="btn" href="#exam" onclick="location.reload()">Restart</a>
-          </div>
-        </div>
-        <p class="small">Estimated levels, confidence, grade expectations (NYC/NYS bands), strengths, priorities, and a targeted action plan.</p>
-
-        <div class="reportGrid">
-          <div class="kpi"><div class="cap">Math level</div><div class="num" id="mathLevel">—</div></div>
-          <div class="kpi"><div class="cap">ELA level</div><div class="num" id="elaLevel">—</div></div>
-          <div class="kpi"><div class="cap">Overall confidence</div><div class="num" id="confOut">—</div></div>
-        </div>
-        <div class="reportGrid" style="margin-top:10px">
-          <div class="kpi"><div class="cap">Math expected (grade)</div><div class="num" id="mathExpected">—</div><div class="small" id="mathGap">—</div></div>
-          <div class="kpi"><div class="cap">ELA expected (grade)</div><div class="num" id="elaExpected">—</div><div class="small" id="elaGap">—</div></div>
-          <div class="kpi"><div class="cap">Grade selected</div><div class="num" id="gradeRef">—</div></div>
-        </div>
-
-        <div style="margin-top:12px">
-          <div class="small">Strengths</div><div class="pills" id="strengthList"></div>
-        </div>
-        <div style="margin-top:8px">
-          <div class="small">Priorities</div><div class="pills" id="needList"></div>
-        </div>
-
-        <div style="margin-top:12px">
-          <label class="small" style="display:flex;align-items:center;gap:8px">
-            <input type="checkbox" id="stdToggle"> Show standards details
-          </label>
-          <div id="stdDetails" class="small" style="display:none;margin-top:8px"></div>
-        </div>
-
-        <div style="margin-top:12px">
-          <div class="small">Action plan</div>
-          <ol id="planList" style="margin-top:8px"></ol>
-        </div>
+      <div class="row">
+        <div class="brand"><span class="orb"></span>Ripa Elevate Academy</div>
+        <nav>
+          <a href="/">Home</a>
+          <a href="#exam">Free Diagnostic</a>
+        </nav>
       </div>
     </div>
-  </section>
-</main>
+  </header>
 
-<footer>
-  © <span id="year"></span> Ripa Elevate Academy · Private by design
-</footer>
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>Instant <span class="txt-grad">Learning Scan</span> — Math & ELA</h1>
+        <p class="sub">20 adaptive questions (from a 120+ item bank) that pinpoint level, compare to grade expectations, and produce a clear action plan—fast.</p>
+        <a class="btn primary" href="#exam" id="openStart">Start Free Diagnostic</a>
+      </div>
+    </section>
 
-<!-- START MODAL -->
-<div class="modalMask" id="startMask" style="display:none">
-  <div class="modal">
-    <h2>Before we begin</h2>
-    <p class="small">Choose the student’s grade to set targets. The test stays adaptive either way.</p>
-    <div class="row">
-      <label>Grade:
-        <select id="gradeSel">
-          <option value="">Auto</option>
-          <option>2</option><option>3</option><option>4</option>
-          <option>5</option><option>6</option><option>7</option><option>8</option>
-        </select>
-      </label>
-      <label>Questions (fixed): 
-        <input type="number" id="lenSel" value="20" min="10" max="40" step="1" />
-      </label>
-    </div>
-    <div class="row" style="margin-top:12px">
-      <button class="btn" id="cancelStart">Cancel</button>
-      <button class="btn primary" id="confirmStart">Start</button>
+    <section id="exam">
+      <div class="container">
+        <div class="stage">
+          <!-- LEFT: Question -->
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px">
+              <div>
+                <div class="small" id="domainNow">Math</div>
+                <h3 id="sectionTitle" style="margin:0">Question 1</h3>
+                <div class="small" id="sectionHint">We’ll adjust difficulty as you go.</div>
+              </div>
+              <div style="min-width:180px">
+                <div class="small" id="progressText" style="text-align:center">0 / 20</div>
+                <div class="progBar"><div class="progFill" id="progressFill"></div></div>
+              </div>
+            </div>
+            <div class="qtext" id="qtext">Click “Start” to begin.</div>
+            <div class="choices" id="choices"></div>
+            <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn" id="finishNow" type="button">Finish now</button>
+              <button class="btn" id="startBtn" type="button">Start</button>
+            </div>
+          </div>
+
+          <!-- RIGHT: Live indicators -->
+          <div class="card">
+            <h3 style="margin:0 0 6px">Live Indicators</h3>
+            <div class="kpis" style="margin-bottom:10px">
+              <div class="kpi"><div class="cap">Estimated Level</div><div class="num" id="estLevel">—</div></div>
+              <div class="kpi"><div class="cap">Confidence</div><div class="num" id="confidence">—</div></div>
+              <div class="kpi"><div class="cap">Domain</div><div class="num" id="domMini">—</div></div>
+            </div>
+            <div class="small">Strength signals</div>
+            <div class="pills" id="strengths"></div>
+            <div class="small" style="margin-top:10px">Priority signals</div>
+            <div class="pills" id="needs"></div>
+          </div>
+        </div>
+
+        <!-- REPORT -->
+        <div class="card" id="report" style="display:none;margin-top:16px">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+            <h3 style="margin:0">Instant Report</h3>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn" onclick="window.print()">Download PDF</button>
+              <a class="btn" href="#exam" onclick="location.reload()">Restart</a>
+            </div>
+          </div>
+          <p class="small">Estimated levels, confidence, grade expectations (NYC/NYS bands), strengths, priorities, and a targeted action plan.</p>
+
+          <div class="reportGrid">
+            <div class="kpi"><div class="cap">Math level</div><div class="num" id="mathLevel">—</div></div>
+            <div class="kpi"><div class="cap">ELA level</div><div class="num" id="elaLevel">—</div></div>
+            <div class="kpi"><div class="cap">Overall confidence</div><div class="num" id="confOut">—</div></div>
+          </div>
+          <div class="reportGrid" style="margin-top:10px">
+            <div class="kpi"><div class="cap">Math expected (grade)</div><div class="num" id="mathExpected">—</div><div class="small" id="mathGap">—</div></div>
+            <div class="kpi"><div class="cap">ELA expected (grade)</div><div class="num" id="elaExpected">—</div><div class="small" id="elaGap">—</div></div>
+            <div class="kpi"><div class="cap">Grade selected</div><div class="num" id="gradeRef">—</div></div>
+          </div>
+
+          <div style="margin-top:12px">
+            <div class="small">Strengths</div><div class="pills" id="strengthList"></div>
+          </div>
+          <div style="margin-top:8px">
+            <div class="small">Priorities</div><div class="pills" id="needList"></div>
+          </div>
+
+          <div style="margin-top:12px">
+            <label class="small" style="display:flex;align-items:center;gap:8px">
+              <input type="checkbox" id="stdToggle"> Show standards details
+            </label>
+            <div id="stdDetails" class="small" style="display:none;margin-top:8px"></div>
+          </div>
+
+          <div style="margin-top:12px">
+            <div class="small">Action plan</div>
+            <ol id="planList" style="margin-top:8px"></ol>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © <span id="year"></span> Ripa Elevate Academy · Private by design
+  </footer>
+
+  <!-- START MODAL -->
+  <div class="modalMask" id="startMask" style="display:none">
+    <div class="modal">
+      <h2>Before we begin</h2>
+      <p class="small">Choose the student’s grade to set targets. The test stays adaptive either way.</p>
+      <div class="row">
+        <label>Grade:
+          <select id="gradeSel">
+            <option value="">Auto</option>
+            <option>2</option><option>3</option><option>4</option>
+            <option>5</option><option>6</option><option>7</option><option>8</option>
+          </select>
+        </label>
+        <label>Questions (fixed): 
+          <input type="number" id="lenSel" value="20" min="10" max="40" step="1" />
+        </label>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn" id="cancelStart">Cancel</button>
+        <button class="btn primary" id="confirmStart">Start</button>
+      </div>
     </div>
   </div>
-</div>
 
-<script>
-// year
-document.getElementById('year').textContent = new Date().getFullYear();
+  <script>
+  // year
+  document.getElementById('year').textContent = new Date().getFullYear();
 
-// ----- START FLOW -----
-const startMask = document.getElementById('startMask');
-const openStart = document.getElementById('openStart');
-const startBtn  = document.getElementById('startBtn');
-const cancelStart = document.getElementById('cancelStart');
-const confirmStart = document.getElementById('confirmStart');
+  // ----- START FLOW -----
+  const startMask = document.getElementById('startMask');
+  const openStart = document.getElementById('openStart');
+  const startBtn  = document.getElementById('startBtn');
+  const cancelStart = document.getElementById('cancelStart');
+  const confirmStart = document.getElementById('confirmStart');
 
-openStart.onclick = ()=>{ startMask.style.display='flex'; };
-startBtn.onclick  = ()=>{ startMask.style.display='flex'; };
-cancelStart.onclick = ()=>{ startMask.style.display='none'; };
+  openStart.onclick = ()=>{ startMask.style.display='flex'; };
+  startBtn.onclick  = ()=>{ startMask.style.display='flex'; };
+  cancelStart.onclick = ()=>{ startMask.style.display='none'; };
 
-// --------- EXAM ENGINE ---------
-(function(){
-  // CONFIG
-  const BANK_TARGET = 120;     // generate at least this many items behind the scenes
-  let TEST_LENGTH   = 20;      // student takes this many (from modal)
-  let chosenGrade   = null;    // set in modal
-  let estLevelStart = 4.0;     // starting estimate if Auto
+  // --------- EXAM ENGINE ---------
+  (function(){
+    // CONFIG
+    const BANK_TARGET = 120;     // generate at least this many items behind the scenes
+    let TEST_LENGTH   = 20;      // student takes this many (from modal)
+    let chosenGrade   = null;    // set in modal
+    let estLevelStart = 4.0;     // starting estimate if Auto
 
-  // STATE
-  const state = {
-    step: 0,
-    domain: 'Math', // starts in Math
-    mathCorrect: 0,
-    elaCorrect: 0,
-    est: estLevelStart,
-    conf: 0.5,
-    strengths: new Map(),
-    needs: new Map(),
-    history: [] // {domain, tag, lvl, correct}
-  };
+    // STATE
+    const state = {
+      step: 0,
+      domain: 'Math', // starts in Math
+      mathCorrect: 0,
+      elaCorrect: 0,
+      est: estLevelStart,
+      conf: 0.5,
+      strengths: new Map(),
+      needs: new Map(),
+      history: [] // {domain, tag, lvl, correct}
+    };
 
-  // TAG -> NY standards family (simple)
-  const TAG_TO_STD = {
-    'arithmetic':'NY-2–3.OA.*',
-    'parity':'NY-2.OA.3',
-    'place-value':'NY-3.NBT.*',
-    'rounding':'NY-3.NBT.*',
-    'fractions':'NY-3–5.NF.*',
-    'geometry':'NY-4.MD.*',
-    'decimals':'NY-5.NBT.*',
-    'percent':'NY-6.RP.*',
-    'unit-rate':'NY-6.RP.*',
-    'integers':'NY-6–7.NS.*',
-    'equations':'NY-6–7.EE.*',
-    'angles':'NY-7.G.*',
-    'functions':'NY-8.F.*',
-    'pythagorean':'NY-8.G.*',
-    'mainidea':'NY-ELA.RI/RL.*',
-    'inference':'NY-ELA.RI/RL.*',
-    'vocab':'NY-ELA.L.*',
-    'homophones':'NY-ELA.L.*',
-    'grammar':'NY-ELA.L.*',
-    'punctuation':'NY-ELA.L.*',
-    'context':'NY-ELA.RI.*',
-  };
+    // TAG -> NY standards family (simple)
+    const TAG_TO_STD = {
+      'arithmetic':'NY-2–3.OA.*',
+      'parity':'NY-2.OA.3',
+      'place-value':'NY-3.NBT.*',
+      'rounding':'NY-3.NBT.*',
+      'fractions':'NY-3–5.NF.*',
+      'geometry':'NY-4.MD.*',
+      'decimals':'NY-5.NBT.*',
+      'percent':'NY-6.RP.*',
+      'unit-rate':'NY-6.RP.*',
+      'integers':'NY-6–7.NS.*',
+      'equations':'NY-6–7.EE.*',
+      'angles':'NY-7.G.*',
+      'functions':'NY-8.F.*',
+      'pythagorean':'NY-8.G.*',
+      'mainidea':'NY-ELA.RI/RL.*',
+      'inference':'NY-ELA.RI/RL.*',
+      'vocab':'NY-ELA.L.*',
+      'homophones':'NY-ELA.L.*',
+      'grammar':'NY-ELA.L.*',
+      'punctuation':'NY-ELA.L.*',
+      'context':'NY-ELA.RI.*',
+    };
 
-  // UI refs
-  const qtext = document.getElementById('qtext');
-  const choicesEl = document.getElementById('choices');
-  const domainNow = document.getElementById('domainNow');
-  const domMini = document.getElementById('domMini');
-  const sectionTitle = document.getElementById('sectionTitle');
-  const sectionHint  = document.getElementById('sectionHint');
-  const progressText = document.getElementById('progressText');
-  const progressFill = document.getElementById('progressFill');
-  const estLevel = document.getElementById('estLevel');
-  const confidence = document.getElementById('confidence');
-  const strengthsEl = document.getElementById('strengths');
-  const needsEl = document.getElementById('needs');
-  const finishNow = document.getElementById('finishNow');
+    // UI refs
+    const qtext = document.getElementById('qtext');
+    const choicesEl = document.getElementById('choices');
+    const domainNow = document.getElementById('domainNow');
+    const domMini = document.getElementById('domMini');
+    const sectionTitle = document.getElementById('sectionTitle');
+    const sectionHint  = document.getElementById('sectionHint');
+    const progressText = document.getElementById('progressText');
+    const progressFill = document.getElementById('progressFill');
+    const estLevel = document.getElementById('estLevel');
+    const confidence = document.getElementById('confidence');
+    const strengthsEl = document.getElementById('strengths');
+    const needsEl = document.getElementById('needs');
+    const finishNow = document.getElementById('finishNow');
 
-  const reportEl = document.getElementById('report');
-  const mathLevelOut = document.getElementById('mathLevel');
-  const elaLevelOut  = document.getElementById('elaLevel');
-  const confOut = document.getElementById('confOut');
-  const mathExpected = document.getElementById('mathExpected');
-  const elaExpected  = document.getElementById('elaExpected');
-  const mathGap = document.getElementById('mathGap');
-  const elaGap  = document.getElementById('elaGap');
-  const gradeRef = document.getElementById('gradeRef');
-  const strengthList = document.getElementById('strengthList');
-  const needList = document.getElementById('needList');
-  const stdToggle = document.getElementById('stdToggle');
-  const stdDetails = document.getElementById('stdDetails');
-  const planList = document.getElementById('planList');
+    const reportEl = document.getElementById('report');
+    const mathLevelOut = document.getElementById('mathLevel');
+    const elaLevelOut  = document.getElementById('elaLevel');
+    const confOut = document.getElementById('confOut');
+    const mathExpected = document.getElementById('mathExpected');
+    const elaExpected  = document.getElementById('elaExpected');
+    const mathGap = document.getElementById('mathGap');
+    const elaGap  = document.getElementById('elaGap');
+    const gradeRef = document.getElementById('gradeRef');
+    const strengthList = document.getElementById('strengthList');
+    const needList = document.getElementById('needList');
+    const stdToggle = document.getElementById('stdToggle');
+    const stdDetails = document.getElementById('stdDetails');
+    const planList = document.getElementById('planList');
 
-  // helpers
-  const rand = n => Math.floor(Math.random()*n);
-  const pick = arr => arr[rand(arr.length)];
-  const shuffle = arr => arr.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
-  const within = (min,max)=> Math.floor(Math.random()*(max-min+1))+min;
-  const bump = (map,key,delta) => map.set(key,(map.get(key)||0)+delta);
+    // helpers
+    const rand = n => Math.floor(Math.random()*n);
+    const pick = arr => arr[rand(arr.length)];
+    const shuffle = arr => arr.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+    const within = (min,max)=> Math.floor(Math.random()*(max-min+1))+min;
+    const bump = (map,key,delta) => map.set(key,(map.get(key)||0)+delta);
 
-  function choiceSet(c, wr){
-    const opts = shuffle([c, ...wr]).slice(0,4);
-    return opts.length<4 ? shuffle([...opts, ...wr].slice(0,4)) : opts;
-  }
-
-  // ----- Question Generators (with difficulty "lvl" ~ grade bands) -----
-  // MATH
-  function genAdd(){ const a=within(1,20), b=within(1,20);
-    const c=String(a+b); const wr=[a+b+1,a+b-1,a+b+2].map(String);
-    return {domain:'Math', tag:'arithmetic', lvl:2.5, t:`What is ${a} + ${b}?`, c, a:choiceSet(c,wr)}; }
-  function genParity(){ const n=within(2,120); const c=(n%2===0)?'Even':'Odd';
-    return {domain:'Math', tag:'parity', lvl:2.5, t:`Is ${n} even or odd?`, c, a:choiceSet(c,['Even','Odd'])}; }
-  function genPlace(){ const th=within(1,9), h=within(0,9), t=within(0,9), o=within(0,9);
-    const num=th*1000+h*100+t*10+o; const digit=pick([['thousands',th,1000],['hundreds',h,100],['tens',t,10],['ones',o,1]]);
-    const c=String(digit[1]*digit[2]); const wr=[digit[2],digit[1],digit[1]*10].map(String);
-    return {domain:'Math', tag:'place-value', lvl:3.5, t:`Value of the digit in the ${digit[0]} place of ${num}?`, c, a:choiceSet(c,wr)}; }
-  function genRound(){ const n=within(120,999); const mode=pick(['ten','hundred']);
-    if(mode==='ten'){ const r=Math.round(n/10)*10; const wr=[r+10,r-10,Math.round(n/100)*100].map(String);
-      return {domain:'Math', tag:'rounding', lvl:3.5, t:`Round ${n} to the nearest ten.`, c:String(r), a:choiceSet(String(r),wr)}; }
-    const r=Math.round(n/100)*100; const wr=[r+100,r-100,Math.round(n/10)*10].map(String);
-    return {domain:'Math', tag:'rounding', lvl:3.7, t:`Round ${n} to the nearest hundred.`, c:String(r), a:choiceSet(String(r),wr)}; }
-  function genFracEquiv(){ const base=[[1,2],[2,3],[3,4]][rand(3)], k=within(2,4);
-    const c=`${base[0]*k}/${base[1]*k}`; const wr=[`${base[0]}/${base[1]+1}`,`${base[0]+1}/${base[1]}`,`${base[0]*k}/${base[1]*k+1}`];
-    return {domain:'Math', tag:'fractions', lvl:4.5, t:`Which fraction is equivalent to ${base[0]}/${base[1]}?`, c, a:choiceSet(c,wr)}; }
-  function genFracAdd(){ const den=pick([4,6,8,10,12]); const a1=within(1,den-1), a2=within(1,den-1);
-    const num=a1+a2; const c=`${num}/${den}`; const wr=[`${a1}/${den}`,`${a2}/${den}`,`${Math.abs(a1-a2)}/${den}`];
-    return {domain:'Math', tag:'fractions', lvl:4.8, t:`Compute: ${a1}/${den} + ${a2}/${den}`, c, a:choiceSet(c,wr)}; }
-  function genAreaPerim(){ const w=within(3,12), h=within(3,12), mode=pick(['area','perim']);
-    if(mode==='area'){ const c=String(w*h); const wr=[w+h,w*h+2,w*h-2].map(String);
-      return {domain:'Math', tag:'geometry', lvl:4.6, t:`Area of a rectangle ${w} by ${h}?`, c, a:choiceSet(c,wr)}; }
-    const p=2*(w+h); const wr=[w+h,p+2,p-2].map(String);
-    return {domain:'Math', tag:'geometry', lvl:4.6, t:`Perimeter of a rectangle ${w} by ${h}?`, c:String(p), a:choiceSet(String(p),wr)}; }
-  function genDecimals(){ const a=(within(10,99)/100).toFixed(2), b=(within(10,99)/100).toFixed(2);
-    const bigger=parseFloat(a)>parseFloat(b)?a:b; const wr=[(parseFloat(bigger)-0.01).toFixed(2),'Equal',(parseFloat(bigger)+0.01).toFixed(2)];
-    return {domain:'Math', tag:'decimals', lvl:5.0, t:`Which is greater? ${a} or ${b}`, c:bigger, a:choiceSet(bigger,wr)}; }
-  function genPercent(){ const base=[40,50,60,80,120][rand(5)], pct=[10,15,20,25,30][rand(5)];
-    const c=String(Math.round(base*pct/100)); const wr=[Math.round(base*(pct+5)/100),Math.round(base*(pct-5)/100),Math.round(base*(pct)/100)+2].map(String);
-    return {domain:'Math', tag:'percent', lvl:6.0, t:`What is ${pct}% of ${base}?`, c, a:choiceSet(c,wr)}; }
-  function genUnitRate(){ const qty=[3,4,5,6][rand(4)], cost=[6,8,10,12,15][rand(5)];
-    const c=(cost/qty).toFixed(2); const wr=[(cost/(qty+1)).toFixed(2),(cost/(qty-1)).toFixed(2),(cost/qty+0.25).toFixed(2)];
-    return {domain:'Math', tag:'unit-rate', lvl:6.2, t:`${qty} apples cost $${cost}. Cost per apple?`, c, a:choiceSet(c,wr)}; }
-  function genIntegers(){ const a=within(-9,9), b=within(-9,9); const c=String(a+b); const wr=[a-b,-a+b,a+b+1].map(String);
-    return {domain:'Math', tag:'integers', lvl:6.8, t:`Compute: ${a} + (${b})`, c, a:choiceSet(c,wr)}; }
-  function genOneStep(){ const x=within(2,12), b=within(2,10); const c=String(x); const wr=[x+1,x-1,b,x+b].map(String);
-    return {domain:'Math', tag:'equations', lvl:6.5, t:`Solve for x: x + ${b} = ${x+b}`, c, a:choiceSet(c,wr)}; }
-  function genTriAngle(){ const a1=within(35,85), a2=within(35,85); let cVal=180-a1-a2; if(cVal<=10)cVal+=20;
-    const c=String(cVal); const wr=[cVal+10,cVal-10,a1].map(String);
-    return {domain:'Math', tag:'angles', lvl:7.0, t:`Triangle has angles ${a1}° and ${a2}°. Find the third angle.`, c, a:choiceSet(c,wr)}; }
-  function genSlope(){ const x1=within(0,6), y1=within(0,10), x2=x1+within(1,6), y2=y1+within(-5,5);
-    const c=String(((y2-y1)/(x2-x1)).toFixed(2)); const wr=[((y2-y1)/(x2-x1)+0.5).toFixed(2),((y2-y1)/(x2-x1)-0.5).toFixed(2),((y2+y1)/(x2-x1)).toFixed(2)];
-    return {domain:'Math', tag:'functions', lvl:8.0, t:`Slope between (${x1},${y1}) and (${x2},${y2})?`, c, a:choiceSet(c,wr)}; }
-  function genPyth(){ const a=[3,5,6,7][rand(4)], b=[4,12,8,24][rand(4)];
-    const cVal=Math.round(Math.sqrt(a*a+b*b)); const c=String(cVal); const wr=[a+b,cVal+1,cVal-1].map(String);
-    return {domain:'Math', tag:'pythagorean', lvl:8.0, t:`Right triangle legs ${a} and ${b}. Hypotenuse length?`, c, a:choiceSet(c,wr)}; }
-
-  const MATH_GENS = [genAdd,genParity,genPlace,genRound,genFracEquiv,genFracAdd,genAreaPerim,genDecimals,genPercent,genUnitRate,genIntegers,genOneStep,genTriAngle,genSlope,genPyth];
-
-  // ELA
-  const PASSAGES = [
-    { text:`The clouds gathered and the wind howled. Soon, droplets tapped the window.`,
-      mi:{t:'What is most likely happening?', c:'A storm is starting', w:['A sunny day','A parade','A quiet night']},
-      inf:{t:'Which clue best supports that?', c:'Wind howled and droplets tapped the window', w:['The day is sunny','People are cheering','Birds are chirping']}
-    },
-    { text:`Many plants bend toward light. Gardeners rotate pots so stems stay straight.`,
-      mi:{t:'What is the main idea?', c:'Plants grow toward light', w:['Plants hate water','Pots are heavy','Gardens are loud']}
-    },
-    { text:`Maya practiced every day before the recital. When the curtain rose, she smiled with confidence.`,
-      inf:{t:'What can you infer?', c:'Maya felt ready to perform', w:['Maya forgot her part','Maya was late','Maya left early']}
+    function choiceSet(c, wr){
+      const opts = shuffle([c, ...wr]).slice(0,4);
+      return opts.length<4 ? shuffle([...opts, ...wr].slice(0,4)) : opts;
     }
-  ];
-  const SYN = [['eager','excited'],['scarce','rare'],['plentiful','abundant'],['assist','help'],['silent','quiet'],['purchase','buy']];
-  const ANT = [['scarce','plentiful'],['difficult','easy'],['ancient','modern'],['expand','shrink']];
-  const HOMO = [{sent:`___ bringing ___ books over ___.`, c:`They're, their, there`, w:[`Their, there, they're`,`There, they're, their`,`They're, there, their`]}];
-  const SV_AGR = [{t:`Choose the correct sentence.`, c:`The dogs run fast.`, w:[`The dogs runs fast.`,`The dog run fast.`,`The dogs running fast.`]}];
-  const COMMA = [{t:`Which sentence uses the comma correctly?`, c:`After the game, we went for pizza.`, w:[`After the game we went, for pizza.`,`After, the game we went for pizza.`,`After the game we, went for pizza.`]}];
 
-  function genFromPassage(){
-    const p = pick(PASSAGES);
-    const use = p.mi && p.inf ? pick(['mi','inf']) : (p.mi?'mi':'inf');
-    const d = use==='mi' ? p.mi : p.inf;
-    return {domain:'ELA', tag:(use==='mi'?'mainidea':'inference'), lvl:5.0,
-            t:`Read: “${p.text}” ${d.t}`, c:d.c, a:choiceSet(d.c,d.w)};
-  }
-  function genSyn(){ const [w,s]=pick(SYN); const wr=shuffle(SYN.map(x=>x[1]).filter(x=>x!==s)).slice(0,3);
-    return {domain:'ELA', tag:'vocab', lvl:4.0, t:`Choose the best synonym for “${w}”.`, c:s, a:choiceSet(s,wr)}; }
-  function genAnt(){ const [w,a]=pick(ANT); const wr=shuffle(ANT.map(x=>x[1]).filter(x=>x!==a)).slice(0,3);
-    return {domain:'ELA', tag:'vocab', lvl:5.0, t:`Choose the antonym of “${w}”.`, c:a, a:choiceSet(a,wr)}; }
-  function genHomo(){ const h=pick(HOMO); return {domain:'ELA', tag:'homophones', lvl:4.5, t:h.sent, c:h.c, a:choiceSet(h.c,h.w)}; }
-  function genSV(){ const s=pick(SV_AGR); return {domain:'ELA', tag:'grammar', lvl:4.5, t:s.t, c:s.c, a:choiceSet(s.c,s.w)}; }
-  function genComma(){ const s=pick(COMMA); return {domain:'ELA', tag:'punctuation', lvl:4.5, t:s.t, c:s.c, a:choiceSet(s.c,s.w)}; }
-  function genContext(){ const blanks=[{sent:`She spoke in a ___ voice so she wouldn’t wake the baby.`, c:'soft', w:['loud','angry','rapid']},
-      {sent:`The desert is known for its ___ rainfall.`, c:'scarce', w:['plentiful','daily','stormy']},
-      {sent:`He was so ___ to start that he arrived early.`, c:'eager', w:['confused','tired','reluctant']}];
-      const b=pick(blanks); return {domain:'ELA', tag:'context', lvl:3.5, t:b.sent, c:b.c, a:choiceSet(b.c,b.w)};
-  }
-  const ELA_GENS = [genFromPassage,genSyn,genAnt,genHomo,genSV,genComma,genContext];
+    // ----- Question Generators (with difficulty "lvl" ~ grade bands) -----
+    // (… same generators as before …)
 
-  // ----- Build a big bank (120+) then adaptively pick 20 -----
-  let BANK = [];
-  function buildBank(){
-    const mathBank = [];
-    const elaBank  = [];
-    while(mathBank.length < BANK_TARGET/2) mathBank.push(pick(MATH_GENS)());
-    while(elaBank.length  < BANK_TARGET/2) elaBank.push(pick(ELA_GENS)());
-    BANK = shuffle([...mathBank, ...elaBank]);
-  }
+    function genAdd(){ const a=within(1,20), b=within(1,20);
+      const c=String(a+b); const wr=[a+b+1,a+b-1,a+b+2].map(String);
+      return {domain:'Math', tag:'arithmetic', lvl:2.5, t:`What is ${a} + ${b}?`, c, a:choiceSet(c,wr)}; }
+    function genParity(){ const n=within(2,120); const c=(n%2===0)?'Even':'Odd';
+      return {domain:'Math', tag:'parity', lvl:2.5, t:`Is ${n} even or odd?`, c, a:choiceSet(c,['Even','Odd'])}; }
+    function genPlace(){ const th=within(1,9), h=within(0,9), t=within(0,9), o=within(0,9);
+      const num=th*1000+h*100+t*10+o; const digit=pick([['thousands',th,1000],['hundreds',h,100],['tens',t,10],['ones',o,1]]);
+      const c=String(digit[1]*digit[2]); const wr=[digit[2],digit[1],digit[1]*10].map(String);
+      return {domain:'Math', tag:'place-value', lvl:3.5, t:`Value of the digit in the ${digit[0]} place of ${num}?`, c, a:choiceSet(c,wr)}; }
+    function genRound(){ const n=within(120,999); const mode=pick(['ten','hundred']);
+      if(mode==='ten'){ const r=Math.round(n/10)*10; const wr=[r+10,r-10,Math.round(n/100)*100].map(String);
+        return {domain:'Math', tag:'rounding', lvl:3.5, t:`Round ${n} to the nearest ten.`, c:String(r), a:choiceSet(String(r),wr)}; }
+      const r=Math.round(n/100)*100; const wr=[r+100,r-100,Math.round(n/10)*10].map(String);
+      return {domain:'Math', tag:'rounding', lvl:3.7, t:`Round ${n} to the nearest hundred.`, c:String(r), a:choiceSet(String(r),wr)}; }
+    function genFracEquiv(){ const base=[[1,2],[2,3],[3,4]][rand(3)], k=within(2,4);
+      const c=`${base[0]*k}/${base[1]*k}`; const wr=[`${base[0]}/${base[1]+1}`,`${base[0]+1}/${base[1]}`,`${base[0]*k}/${base[1]*k+1}`];
+      return {domain:'Math', tag:'fractions', lvl:4.5, t:`Which fraction is equivalent to ${base[0]}/${base[1]}?`, c, a:choiceSet(c,wr)}; }
+    function genFracAdd(){ const den=pick([4,6,8,10,12]); const a1=within(1,den-1), a2=within(1,den-1);
+      const num=a1+a2; const c=`${num}/${den}`; const wr=[`${a1}/${den}`,`${a2}/${den}`,`${Math.abs(a1-a2)}/${den}`];
+      return {domain:'Math', tag:'fractions', lvl:4.8, t:`Compute: ${a1}/${den} + ${a2}/${den}`, c, a:choiceSet(c,wr)}; }
+    function genAreaPerim(){ const w=within(3,12), h=within(3,12), mode=pick(['area','perim']);
+      if(mode==='area'){ const c=String(w*h); const wr=[w+h,w*h+2,w*h-2].map(String);
+        return {domain:'Math', tag:'geometry', lvl:4.6, t:`Area of a rectangle ${w} by ${h}?`, c, a:choiceSet(c,wr)}; }
+      const p=2*(w+h); const wr=[w+h,p+2,p-2].map(String);
+      return {domain:'Math', tag:'geometry', lvl:4.6, t:`Perimeter of a rectangle ${w} by ${h}?`, c:String(p), a:choiceSet(String(p),wr)}; }
+    function genDecimals(){ const a=(within(10,99)/100).toFixed(2), b=(within(10,99)/100).toFixed(2);
+      const bigger=parseFloat(a)>parseFloat(b)?a:b; const wr=[(parseFloat(bigger)-0.01).toFixed(2),'Equal',(parseFloat(bigger)+0.01).toFixed(2)];
+      return {domain:'Math', tag:'decimals', lvl:5.0, t:`Which is greater? ${a} or ${b}`, c:bigger, a:choiceSet(bigger,wr)}; }
+    function genPercent(){ const base=[40,50,60,80,120][rand(5)], pct=[10,15,20,25,30][rand(5)];
+      const c=String(Math.round(base*pct/100)); const wr=[Math.round(base*(pct+5)/100),Math.round(base*(pct-5)/100),Math.round(base*(pct)/100)+2].map(String);
+      return {domain:'Math', tag:'percent', lvl:6.0, t:`What is ${pct}% of ${base}?`, c, a:choiceSet(c,wr)}; }
+    function genUnitRate(){ const qty=[3,4,5,6][rand(4)], cost=[6,8,10,12,15][rand(5)];
+      const c=(cost/qty).toFixed(2); const wr=[(cost/(qty+1)).toFixed(2),(cost/(qty-1)).toFixed(2),(cost/qty+0.25).toFixed(2)];
+      return {domain:'Math', tag:'unit-rate', lvl:6.2, t:`${qty} apples cost $${cost}. Cost per apple?`, c, a:choiceSet(c,wr)}; }
+    function genIntegers(){ const a=within(-9,9), b=within(-9,9); const c=String(a+b); const wr=[a-b,-a+b,a+b+1].map(String);
+      return {domain:'Math', tag:'integers', lvl:6.8, t:`Compute: ${a} + (${b})`, c, a:choiceSet(c,wr)}; }
+    function genOneStep(){ const x=within(2,12), b=within(2,10); const c=String(x); const wr=[x+1,x-1,b,x+b].map(String);
+      return {domain:'Math', tag:'equations', lvl:6.5, t:`Solve for x: x + ${b} = ${x+b}`, c, a:choiceSet(c,wr)}; }
+    function genTriAngle(){ const a1=within(35,85), a2=within(35,85); let cVal=180-a1-a2; if(cVal<=10)cVal+=20;
+      const c=String(cVal); const wr=[cVal+10,cVal-10,a1].map(String);
+      return {domain:'Math', tag:'angles', lvl:7.0, t:`Triangle has angles ${a1}° and ${a2}°. Find the third angle.`, c, a:choiceSet(c,wr)}; }
+    function genSlope(){ const x1=within(0,6), y1=within(0,10), x2=x1+within(1,6), y2=y1+within(-5,5);
+      const c=String(((y2-y1)/(x2-x1)).toFixed(2)); const wr=[((y2-y1)/(x2-x1)+0.5).toFixed(2),((y2-y1)/(x2-x1)-0.5).toFixed(2),((y2+y1)/(x2-x1)).toFixed(2)];
+      return {domain:'Math', tag:'functions', lvl:8.0, t:`Slope between (${x1},${y1}) and (${x2},${y2})?`, c, a:choiceSet(c,wr)}; }
+    function genPyth(){ const a=[3,5,6,7][rand(4)], b=[4,12,8,24][rand(4)];
+      const cVal=Math.round(Math.sqrt(a*a+b*b)); const c=String(cVal); const wr=[a+b,cVal+1,cVal-1].map(String);
+      return {domain:'Math', tag:'pythagorean', lvl:8.0, t:`Right triangle legs ${a} and ${b}. Hypotenuse length?`, c, a:choiceSet(c,wr)}; }
 
-  // pick next question near current estimate, alternate domains roughly
-  function nextQuestion(){
-    // bias: early half Math, later half ELA
-    const wantDomain = state.step < Math.floor(TEST_LENGTH/2) ? 'Math' : 'ELA';
-    // find candidates near current est
-    const sorted = BANK
-      .filter(q => q.domain === wantDomain)
-      .map(q => [Math.abs(q.lvl - state.est), q])
-      .sort((a,b)=>a[0]-b[0])
-      .map(x=>x[1]);
-    // fallback if empty
-    const q = sorted[0] || pick(BANK);
-    state.domain = q.domain;
-    return q;
-  }
+    const MATH_GENS = [genAdd,genParity,genPlace,genRound,genFracEquiv,genFracAdd,genAreaPerim,genDecimals,genPercent,genUnitRate,genIntegers,genOneStep,genTriAngle,genSlope,genPyth];
 
-  // expected targets for report
-  function expectedForGrade(g){
-    if(!g) return null;
-    const gg = Math.max(2, Math.min(8, Number(g)));
-    return { math: gg*1.0, ela: gg*1.0 };
-  }
-  function gapText(current, expected){
-    if(expected===null) return 'Set a grade to see target';
-    const diff = +(current - expected).toFixed(1);
-    if(diff >= 0.3) return `Ahead (+${diff})`;
-    if(diff <= -0.3) return `Below (${diff})`;
-    return 'On track (±0.2)';
-  }
-  function topTags(map, n=5){
-    return Array.from(map.entries()).sort((a,b)=>b[1]-a[1]).slice(0,n).map(x=>x[0]);
-  }
+    // ELA
+    const PASSAGES = [
+      { text:`The clouds gathered and the wind howled. Soon, droplets tapped the window.`,
+        mi:{t:'What is most likely happening?', c:'A storm is starting', w:['A sunny day','A parade','A quiet night']},
+        inf:{t:'Which clue best supports that?', c:'Wind howled and droplets tapped the window', w:['The day is sunny','People are cheering','Birds are chirping']}
+      },
+      { text:`Many plants bend toward light. Gardeners rotate pots so stems stay straight.`,
+        mi:{t:'What is the main idea?', c:'Plants grow toward light', w:['Plants hate water','Pots are heavy','Gardens are loud']}
+      },
+      { text:`Maya practiced every day before the recital. When the curtain rose, she smiled with confidence.`,
+        inf:{t:'What can you infer?', c:'Maya felt ready to perform', w:['Maya forgot her part','Maya was late','Maya left early']}
+      }
+    ];
+    const SYN = [['eager','excited'],['scarce','rare'],['plentiful','abundant'],['assist','help'],['silent','quiet'],['purchase','buy']];
+    const ANT = [['scarce','plentiful'],['difficult','easy'],['ancient','modern'],['expand','shrink']];
+    const HOMO = [{sent:`___ bringing ___ books over ___.`, c:`They're, their, there`, w:[`Their, there, they're`,`There, they're, their`,`They're, there, their`]}];
+    const SV_AGR = [{t:`Choose the correct sentence.`, c:`The dogs run fast.`, w:[`The dogs runs fast.`,`The dog run fast.`,`The dogs running fast.`]}];
+    const COMMA = [{t:`Which sentence uses the comma correctly?`, c:`After the game, we went for pizza.`, w:[`After the game we went, for pizza.`,`After, the game we went for pizza.`,`After the game we, went for pizza.`]}];
 
-  function renderLive(){
-    domainNow.textContent = state.domain;
-    domMini.textContent   = state.domain;
-    estLevel.textContent  = state.est.toFixed(1);
-    confidence.textContent= Math.round(state.conf*100)+'%';
-    strengthsEl.innerHTML = topTags(state.strengths,5).map(t=>`<span class="pill">${t}</span>`).join('') || '<span class="small">—</span>';
-    needsEl.innerHTML     = topTags(state.needs,5).map(t=>`<span class="pill">${t}</span>`).join('') || '<span class="small">—</span>';
-    progressText.textContent = `${state.step} / ${TEST_LENGTH}`;
-    progressFill.style.width = `${(state.step/TEST_LENGTH)*100}%`;
-    sectionTitle.textContent = `Question ${state.step+1}`;
-    sectionHint.textContent  = state.domain==='Math'
-      ? 'Grade-aligned math skills (auto-adjusting).'
-      : 'Reading & language skills (auto-adjusting).';
-  }
-
-  let currentQ = null;
-  function renderQ(){
-    currentQ = nextQuestion();
-    renderLive();
-    qtext.textContent = currentQ.t;
-    choicesEl.innerHTML = '';
-    shuffle(currentQ.a.slice()).forEach(opt=>{
-      const b=document.createElement('button');
-      b.textContent=opt;
-      b.onclick=()=>answer(opt);
-      choicesEl.appendChild(b);
-    });
-  }
-
-  function answer(selected){
-    const correct = (selected === currentQ.c);
-    // update estimate & confidence
-    if(correct){
-      if(state.domain==='Math') state.mathCorrect++; else state.elaCorrect++;
-      state.est = Math.min(8, state.est + (currentQ.lvl>=state.est? 0.25:0.12));
-      state.conf = Math.min(1, state.conf + 0.04);
-      bump(state.strengths, currentQ.tag, 1);
-    }else{
-      state.est = Math.max(2, state.est - 0.10);
-      state.conf = Math.max(0.2, state.conf - 0.02);
-      bump(state.needs, currentQ.tag, 1);
+    function genFromPassage(){
+      const p = pick(PASSAGES);
+      const use = p.mi && p.inf ? pick(['mi','inf']) : (p.mi?'mi':'inf');
+      const d = use==='mi' ? p.mi : p.inf;
+      return {domain:'ELA', tag:(use==='mi'?'mainidea':'inference'), lvl:5.0,
+              t:`Read: “${p.text}” ${d.t}`, c:d.c, a:choiceSet(d.c,d.w)};
     }
-    state.history.push({domain:currentQ.domain, tag:currentQ.tag, lvl:currentQ.lvl, correct});
-    state.step++;
-
-    // remove used item to avoid repeats
-    const idx = BANK.indexOf(currentQ);
-    if(idx>=0) BANK.splice(idx,1);
-
-    if(state.step>=TEST_LENGTH){ finish(); } else { renderQ(); }
-  }
-
-  function finish(){
-    progressFill.style.width='100%';
-
-    // derive quick domain levels from performance split
-    const half = Math.floor(TEST_LENGTH/2);
-    const mathLevel = Math.min(8, Math.max(2, (chosenGrade || 5) + ((state.mathCorrect - (half/2))*0.2)));
-    const elaLevel  = Math.min(8, Math.max(2, (chosenGrade || 5) + ((state.elaCorrect  - (TEST_LENGTH-half)/2)*0.2)));
-
-    mathLevelOut.textContent = mathLevel.toFixed(1);
-    elaLevelOut.textContent  = elaLevel.toFixed(1);
-    confOut.textContent      = Math.round(state.conf*100)+'%';
-
-    const exp = expectedForGrade(chosenGrade);
-    const mExp = exp ? exp.math : null;
-    const eExp = exp ? exp.ela  : null;
-    mathExpected.textContent = (mExp!==null) ? mExp.toFixed(1) : '—';
-    elaExpected.textContent  = (eExp!==null) ? eExp.toFixed(1) : '—';
-    mathGap.textContent = gapText(parseFloat(mathLevelOut.textContent), mExp);
-    elaGap.textContent  = gapText(parseFloat(elaLevelOut.textContent),  eExp);
-    gradeRef.textContent = chosenGrade ? `Grade ${chosenGrade}` : 'Auto';
-
-    // strengths & needs lists
-    strengthList.innerHTML = topTags(state.strengths,8).map(t=>`<span class="pill">${t}</span>`).join('') || '<span class="small">—</span>';
-    needList.innerHTML     = topTags(state.needs,8).map(t=>`<span class="pill">${t}</span>`).join('') || '<span class="small">—</span>';
-
-    // standards panel (combined)
-    const allTags = Array.from(new Set([...topTags(state.strengths,12), ...topTags(state.needs,12)]));
-    stdDetails.innerHTML = allTags.length
-      ? allTags.map(tag=>`<div class="pill">${tag}</div> <span class="small">${TAG_TO_STD[tag]||'—'}</span>`).join('<br/>')
-      : '—';
-    stdToggle.checked=false;
-    stdToggle.onchange = ()=>{ stdDetails.style.display = stdToggle.checked ? 'block':'none'; };
-
-    // Action Plan (richer)
-    planList.innerHTML = '';
-    const needs = topTags(state.needs,5);
-    const strengths = topTags(state.strengths,5);
-
-    function li(txt){ const el=document.createElement('li'); el.textContent=txt; return el; }
-    // 2-week and 4-week structured plan
-    const overall = (mExp && eExp) ? ((mathLevel+mExp)/2 + (elaLevel+eExp)/2)/2 : (mathLevel+elaLevel)/2;
-    const daily = overall < (chosenGrade||5) ? '15–20' : '10–15';
-
-    planList.appendChild(li(`Weeks 1–2: ${daily} mins/day targeted practice.`));
-    if(needs.length){
-      planList.appendChild(li(`Focus skills: ${needs.slice(0,3).join(', ')}.`));
-    } else {
-      planList.appendChild(li(`Maintain strengths with mixed review 2x/week.`));
+    function genSyn(){ const [w,s]=pick(SYN); const wr=shuffle(SYN.map(x=>x[1]).filter(x=>x!==s)).slice(0,3);
+      return {domain:'ELA', tag:'vocab', lvl:4.0, t:`Choose the best synonym for “${w}”.`, c:s, a:choiceSet(s,wr)}; }
+    function genAnt(){ const [w,a]=pick(ANT); const wr=shuffle(ANT.map(x=>x[1]).filter(x=>x!==a)).slice(0,3);
+      return {domain:'ELA', tag:'vocab', lvl:5.0, t:`Choose the antonym of “${w}”.`, c:a, a:choiceSet(a,wr)}; }
+    function genHomo(){ const h=pick(HOMO); return {domain:'ELA', tag:'homophones', lvl:4.5, t:h.sent, c:h.c, a:choiceSet(h.c,h.w)}; }
+    function genSV(){ const s=pick(SV_AGR); return {domain:'ELA', tag:'grammar', lvl:4.5, t:s.t, c:s.c, a:choiceSet(s.c,s.w)}; }
+    function genComma(){ const s=pick(COMMA); return {domain:'ELA', tag:'punctuation', lvl:4.5, t:s.t, c:s.c, a:choiceSet(s.c,s.w)}; }
+    function genContext(){ const blanks=[{sent:`She spoke in a ___ voice so she wouldn’t wake the baby.`, c:'soft', w:['loud','angry','rapid']},
+        {sent:`The desert is known for its ___ rainfall.`, c:'scarce', w:['plentiful','daily','stormy']},
+        {sent:`He was so ___ to start that he arrived early.`, c:'eager', w:['confused','tired','reluctant']}];
+        const b=pick(blanks); return {domain:'ELA', tag:'context', lvl:3.5, t:b.sent, c:b.c, a:choiceSet(b.c,b.w)};
     }
-    planList.appendChild(li(`Mini-check in 2 weeks (10 mins) — adjust difficulty based on results.`));
-    planList.appendChild(li(`Weeks 3–4: Spiral practice mixing 2 priority skills + 1 strength.`));
-    planList.appendChild(li(`Parent tip: Celebrate quick wins; short, consistent sessions beat long ones.`));
+    const ELA_GENS = [genFromPassage,genSyn,genAnt,genHomo,genSV,genComma,genContext];
 
-    // Show report
-    document.querySelector('.stage').style.display='none';
-    reportEl.style.display='block';
-    reportEl.scrollIntoView({behavior:'smooth'});
-  }
+    // ----- Build a big bank (120+) then adaptively pick 20 -----
+    let BANK = [];
+    function buildBank(){
+      const mathBank = [];
+      const elaBank  = [];
+      while(mathBank.length < BANK_TARGET/2) mathBank.push(pick(MATH_GENS)());
+      while(elaBank.length  < BANK_TARGET/2) elaBank.push(pick(ELA_GENS)());
+      BANK = shuffle([...mathBank, ...elaBank]);
+    }
 
-  // Start modal confirm
-  confirmStart.onclick = ()=>{
-    const gSel = document.getElementById('gradeSel').value;
-    const len  = parseInt(document.getElementById('lenSel').value||'20',10);
-    chosenGrade = gSel ? Number(gSel) : null;
-    TEST_LENGTH = Math.max(10, Math.min(40, len));  // guardrails (demo: up to 40)
-    state.est = chosenGrade ? Number(chosenGrade) : estLevelStart;
-    state.conf = 0.5;
-    state.step = 0;
-    state.mathCorrect = 0; state.elaCorrect = 0;
-    state.strengths.clear(); state.needs.clear(); state.history.length=0;
-    buildBank();
-    startMask.style.display='none';
-    // first question
-    renderQ();
-  };
+    // pick next question near current estimate, alternate domains roughly
+    function nextQuestion(){
+      // bias: early half Math, later half ELA
+      const wantDomain = state.step < Math.floor(TEST_LENGTH/2) ? 'Math' : 'ELA';
+      // find candidates near current est
+      const sorted = BANK
+        .filter(q => q.domain === wantDomain)
+        .map(q => [Math.abs(q.lvl - state.est), q])
+        .sort((a,b)=>a[0]-b[0])
+        .map(x=>x[1]);
+      // fallback if empty
+      const q = sorted[0] || pick(BANK);
+      state.domain = q.domain;
+      return q;
+    }
 
-  // Finish now button
-  finishNow.onclick = finish;
+    // expected targets for report
+    function expectedForGrade(g){
+      if(!g) return null;
+      const gg = Math.max(2, Math.min(8, Number(g)));
+      return { math: gg*1.0, ela: gg*1.0 };
+    }
+    function gapText(current, expected){
+      if(expected===null) return 'Set a grade to see target';
+      const diff = +(current - expected).toFixed(1);
+      if(diff >= 0.3) return `Ahead (+${diff})`;
+      if(diff <= -0.3) return `Below (${diff})`;
+      return 'On track (±0.2)';
+    }
+    function topTags(map, n=5){
+      return Array.from(map.entries()).sort((a,b)=>b[1]-a[1]).slice(0,n).map(x=>x[0]);
+    }
 
-  // Open modal on page load scroll-to-exam or Start button
-  // (we leave initial screen idle until user clicks Start)
-})();
-</script>
+    function renderLive(){
+      domainNow.textContent = state.domain;
+      domMini.textContent   = state.domain;
+      estLevel.textContent  = state.est.toFixed(1);
+      confidence.textContent= Math.round(state.conf*100)+'%';
+      strengthsEl.innerHTML = topTags(state.strengths,5).map(t=>`<span class="pill">${t}</span>`).join('') || '<span class="small">—</span>';
+      needsEl.innerHTML     = topTags(state.needs,5).map(t=>`<span class="pill">${t}</span>`).join('') || '<span class="small">—</span>';
+      progressText.textContent = `${state.step} / ${TEST_LENGTH}`;
+      progressFill.style.width = `${(state.step/TEST_LENGTH)*100}%`;
+      sectionTitle.textContent = `Question ${state.step+1}`;
+      sectionHint.textContent  = state.domain==='Math'
+        ? 'Grade-aligned math skills (auto-adjusting).'
+        : 'Reading & language skills (auto-adjusting).';
+    }
+
+    let currentQ = null;
+    function renderQ(){
+      currentQ = nextQuestion();
+      renderLive();
+      qtext.textContent = currentQ.t;
+      choicesEl.innerHTML = '';
+      shuffle(currentQ.a.slice()).forEach(opt=>{
+        const b=document.createElement('button');
+        b.textContent=opt;
+        b.onclick=()=>answer(opt);
+        choicesEl.appendChild(b);
+      });
+    }
+
+    function answer(selected){
+      const correct = (selected === currentQ.c);
+      // update estimate & confidence
+      if(correct){
+        if(state.domain==='Math') state.mathCorrect++; else state.elaCorrect++;
+        state.est = Math.min(8, state.est + (currentQ.lvl>=state.est? 0.25:0.12));
+        state.conf = Math.min(1, state.conf + 0.04);
+        bump(state.strengths, currentQ.tag, 1);
+      }else{
+        state.est = Math.max(2, state.est - 0.10);
+        state.conf = Math.max(0.2, state.conf - 0.02);
+        bump(state.needs, currentQ.tag, 1);
+      }
+      state.history.push({domain:currentQ.domain, tag:currentQ.tag, lvl:currentQ.lvl, correct});
+      state.step++;
+
+      // remove used item to avoid repeats
+      const idx = BANK.indexOf(currentQ);
+      if(idx>=0) BANK.splice(idx,1);
+
+      if(state.step>=TEST_LENGTH){ finish(); } else { renderQ(); }
+    }
+
+    function finish(){
+      progressFill.style.width='100%';
+
+      // derive quick domain levels from performance split
+      const half = Math.floor(TEST_LENGTH/2);
+      const mathLevel = Math.min(8, Math.max(2, (chosenGrade || 5) + ((state.mathCorrect - (half/2))*0.2)));
+      const elaLevel  = Math.min(8, Math.max(2, (chosenGrade || 5) + ((state.elaCorrect  - (TEST_LENGTH-half)/2)*0.2)));
+
+      mathLevelOut.textContent = mathLevel.toFixed(1);
+      elaLevelOut.textContent  = elaLevel.toFixed(1);
+      confOut.textContent      = Math.round(state.conf*100)+'%';
+
+      const exp = expectedForGrade(chosenGrade);
+      const mExp = exp ? exp.math : null;
+      const eExp = exp ? exp.ela  : null;
+      mathExpected.textContent = (mExp!==null) ? mExp.toFixed(1) : '—';
+      elaExpected.textContent  = (eExp!==null) ? eExp.toFixed(1) : '—';
+      mathGap.textContent = gapText(parseFloat(mathLevelOut.textContent), mExp);
+      elaGap.textContent  = gapText(parseFloat(elaLevelOut.textContent),  eExp);
+      gradeRef.textContent = chosenGrade ? `Grade ${chosenGrade}` : 'Auto';
+
+      // strengths & needs lists
+      strengthList.innerHTML = topTags(state.strengths,8).map(t=>`<span class="pill">${t}</span>`).join('') || '<span class="small">—</span>';
+      needList.innerHTML     = topTags(state.needs,8).map(t=>`<span class="pill">${t}</span>`).join('') || '<span class="small">—</span>';
+
+      // standards panel (combined)
+      const allTags = Array.from(new Set([...topTags(state.strengths,12), ...topTags(state.needs,12)]));
+      stdDetails.innerHTML = allTags.length
+        ? allTags.map(tag=>`<div class="pill">${tag}</div> <span class="small">${TAG_TO_STD[tag]||'—'}</span>`).join('<br/>')
+        : '—';
+      stdToggle.checked=false;
+      stdToggle.onchange = ()=>{ stdDetails.style.display = stdToggle.checked ? 'block':'none'; };
+
+      // Action Plan (richer)
+      planList.innerHTML = '';
+      const needs = topTags(state.needs,5);
+
+      function li(txt){ const el=document.createElement('li'); el.textContent=txt; return el; }
+      const overall = (mExp && eExp) ? ((mathLevel+mExp)/2 + (elaLevel+eExp)/2)/2 : (mathLevel+elaLevel)/2;
+      const daily = overall < (chosenGrade||5) ? '15–20' : '10–15';
+
+      planList.appendChild(li(`Weeks 1–2: ${daily} mins/day targeted practice.`));
+      if(needs.length){
+        planList.appendChild(li(`Focus skills: ${needs.slice(0,3).join(', ')}.`));
+      } else {
+        planList.appendChild(li(`Maintain strengths with mixed review 2x/week.`));
+      }
+      planList.appendChild(li(`Mini-check in 2 weeks (10 mins) — adjust difficulty based on results.`));
+      planList.appendChild(li(`Weeks 3–4: Spiral practice mixing 2 priority skills + 1 strength.`));
+      planList.appendChild(li(`Parent tip: Celebrate quick wins; short, consistent sessions beat long ones.`));
+
+      // Show report
+      document.querySelector('.stage').style.display='none';
+      reportEl.style.display='block';
+      reportEl.scrollIntoView({behavior:'smooth'});
+    }
+
+    // Start modal confirm
+    confirmStart.onclick = ()=>{
+      const gSel = document.getElementById('gradeSel').value;
+      const len  = parseInt(document.getElementById('lenSel').value||'20',10);
+      chosenGrade = gSel ? Number(gSel) : null;
+      TEST_LENGTH = Math.max(10, Math.min(40, len));
+      state.est = chosenGrade ? Number(chosenGrade) : estLevelStart;
+      state.conf = 0.5;
+      state.step = 0;
+      state.mathCorrect = 0; state.elaCorrect = 0;
+      state.strengths.clear(); state.needs.clear(); state.history.length=0;
+      buildBank();
+      startMask.style.display='none';
+      renderQ();
+    };
+
+    finishNow.onclick = finish;
+  })();
+  </script>
 </body>
 </html>
 
