@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Access Granted – Smart Diagnostic</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
+      <div class="logo"><a href="index.html">Ripa Elevate Academy</a></div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="resources.html">Resources</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="section" style="text-align:center;max-width:900px;margin:0 auto;">
+    <h2>Access Granted</h2>
+    <p>Thanks! Your purchase was successful and your diagnostic access is unlocked on this device.</p>
+    <p>You will be redirected to the diagnostic in a moment. If not, use the button below.</p>
+    <div style="margin-top:16px;">
+      <a class="btn" href="diagnostic-test.html">Go to Diagnostic</a>
+    </div>
+  </main>
+
+  <!-- Paywall helper sets the access flag via ?access=diag -->
+  <script src="js/paywall.js"></script>
+  <script>
+    setTimeout(function(){ window.location.href = 'diagnostic-test.html'; }, 1200);
+  </script>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Ripa Elevate Academy. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
