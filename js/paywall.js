@@ -9,12 +9,10 @@
   // If Stripe redirected with ?access=diag, set local unlock
   const access = getParam('access');
   if (access === 'diag') {
-    try {
-      localStorage.setItem('rea_diag_paid', '1');
-    } catch (e) {}
+    try { localStorage.setItem('rea_diag_paid', '1'); } catch (e) {}
   }
 
-  // Public function: call this at top of locked pages
+  // Require access on protected pages
   window.requireDiagAccess = function () {
     try {
       const ok = localStorage.getItem('rea_diag_paid') === '1';
@@ -24,7 +22,7 @@
     }
   };
 
-  // Optional helper to clear access (for testing)
+  // Optional: clear unlock (for your testing)
   window.clearDiagAccess = function () {
     try { localStorage.removeItem('rea_diag_paid'); } catch (e) {}
   };
