@@ -1,4 +1,3 @@
-<script>
 // Simple paywall helper for Ripa Elevate Academy
 (function () {
   function getParam(name) {
@@ -22,9 +21,9 @@
     }
   };
 
-  // Optional: clear unlock (for your testing)
+  // Optional: clear unlock (for testing)
   window.clearDiagAccess = function () {
     try { localStorage.removeItem('rea_diag_paid'); } catch (e) {}
   };
 })();
-</script>
+
