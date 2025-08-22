@@ -2,56 +2,159 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Locked — Smart Diagnostic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Unlock Diagnostic – Ripa Elevate Academy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css"/>
   <style>
-    :root{--bg:#0e1320;--panel:rgba(255,255,255,.06);--stroke:rgba(255,255,255,.14);--text:#f3f6ff}
-    body{margin:0;min-height:100dvh;display:grid;place-items:center;background:var(--bg);color:var(--text);font-family:Poppins,system-ui,Segoe UI,Roboto,Arial,sans-serif}
-    .card{max-width:720px;width:min(92%,720px);padding:28px;border-radius:16px;background:var(--panel);border:1px solid var(--stroke);text-align:center}
-    .btn{display:inline-block;margin:.4rem .3rem;padding:12px 18px;border-radius:12px;text-decoration:none;font-weight:600;border:1px solid var(--stroke)}
-    .primary{background:#F28F3B;color:#fff;border-color:#F28F3B}
-    .ghost{color:#fff}
-    .muted{color:#b9c2d6}
-    input{padding:.8rem 1rem;border-radius:10px;border:1px solid #2a3450;background:rgba(255,255,255,.05);color:#fff;min-width:260px}
-    form{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:.6rem}
-    .msg{margin-top:.6rem}
-    .ok{background:#e8fff1;color:#0a7a3f;border:1px solid #b5efcb;border-radius:10px;padding:.55rem .9rem;display:inline-block}
-    .err{background:#ffefef;color:#9a1a1a;border:1px solid #ffd0d0;border-radius:10px;padding:.55rem .9rem;display:inline-block}
+    /* Light inline polish so this page looks great even without site CSS */
+    :root{
+      --bg:#0e1320; --text:#f3f6ff; --muted:#c6cee6; --card:rgba(255,255,255,.06);
+      --stroke:rgba(255,255,255,.12); --brand:#F28F3B;
+    }
+    body{background:var(--bg);color:var(--text);font-family:Poppins,system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:0}
+    .wrap{width:min(1100px,92%);margin:0 auto}
+    header{border-bottom:1px solid var(--stroke);backdrop-filter:saturate(140%) blur(6px)}
+    header .bar{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+    .logo a{font-weight:700;color:var(--text);text-decoration:none}
+    nav ul{display:flex;gap:18px;list-style:none;padding:0;margin:0}
+    nav a{color:var(--muted);text-decoration:none}
+    .hero{padding:60px 0 24px;text-align:center}
+    h1{font-size:clamp(28px,4.8vw,46px);margin:0 0 10px}
+    .muted{color:var(--muted)}
+    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+    .card{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:18px}
+    .card h2{margin:0 0 8px}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid var(--stroke);font-size:12px;margin-right:6px}
+    .box{display:flex;align-items:center;gap:10px;justify-content:space-between;border:1px dashed var(--stroke);border-radius:12px;padding:12px;margin:8px 0;background:rgba(255,255,255,.04)}
+    .copy{cursor:pointer;border:1px solid var(--stroke);border-radius:10px;padding:6px 10px;background:rgba(255,255,255,.06);color:var(--text)}
+    .btn{display:inline-block;padding:12px 18px;border-radius:12px;border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--text);text-decoration:none;font-weight:600}
+    .btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+    .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+    footer{border-top:1px solid var(--stroke);margin-top:40px}
+    .note{font-size:13px;color:var(--muted)}
+    @media (max-width:900px){ .grid{grid-template-columns:1fr} }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h2>Smart Diagnostic is Locked</h2>
-    <p class="muted">Get instant placement, strengths & gaps, and a custom study plan. Unlock below:</p>
-
-    <div style="margin:.6rem 0 1rem">
-      <a class="btn primary" href="zelle.html">Pay with Zelle & Unlock</a>
-      <a class="btn ghost" href="contact.html">Contact Brian</a>
+  <header>
+    <div class="wrap bar">
+      <div class="logo"><a href="index.html">Ripa Elevate Academy</a></div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
     </div>
+  </header>
 
-    <p class="muted" style="margin-top:1rem">Already paid? Enter your unlock code:</p>
-    <form id="unlockForm">
-      <input id="codeInput" type="text" placeholder="Enter unlock code" required />
-      <button class="btn primary" type="submit">Unlock</button>
-    </form>
-    <div class="msg" id="msg"></div>
-  </div>
+  <main class="wrap">
+    <section class="hero">
+      <h1>Unlock the Smart Diagnostic</h1>
+      <p class="muted">Pay once with Zelle, then unlock this device and start the test immediately.</p>
+    </section>
 
-  <script src="js/paywall.js?v=2"></script>
+    <section class="grid">
+      <!-- Left: Payment Instructions -->
+      <div class="card">
+        <h2>Step 1 — Send Zelle Payment</h2>
+        <p class="muted">Choose one of the options:</p>
+        <div class="pills">
+          <span class="pill">$10 — One-Time Diagnostic</span>
+          <span class="pill">$25/mo — Unlimited Diagnostics & Video Library</span>
+        </div>
+
+        <div class="box">
+          <div>
+            <div class="muted" style="font-size:12px;">Zelle (Phone)</div>
+            <div style="font-weight:700;">+1 (347) 996-0551</div>
+          </div>
+          <button class="copy" data-copy="+13479960551">Copy</button>
+        </div>
+
+        <div class="box">
+          <div>
+            <div class="muted" style="font-size:12px;">Zelle (Email)</div>
+            <div style="font-weight:700;">ripabrian93@gmail.com</div>
+          </div>
+          <button class="copy" data-copy="ripabrian93@gmail.com">Copy</button>
+        </div>
+
+        <p class="note">Memo suggestion: “Diagnostic – student name & grade”.</p>
+        <p class="note">If you prefer another method (cash/card), contact us and we’ll help right away.</p>
+      </div>
+
+      <!-- Right: Unlock -->
+      <div class="card">
+        <h2>Step 2 — Unlock This Device</h2>
+        <p class="muted">After you’ve sent the Zelle payment, click the button below to unlock access on this device.</p>
+
+        <div class="cta">
+          <button id="unlockBtn" class="btn primary">I’ve Paid — Unlock & Start</button>
+          <a class="btn" href="diagnostic-test.html?access=diag">Try direct link</a>
+        </div>
+
+        <hr style="border:none;border-top:1px solid var(--stroke);margin:16px 0"/>
+
+        <h3 style="margin:0 0 6px">Need help?</h3>
+        <p class="muted" style="margin:0 0 10px;">
+          Text or call <strong>(347) 996-0551</strong> or email <strong>ripabrian93@gmail.com</strong>.
+        </p>
+
+        <p class="note">
+          Unlocking is private by design. We only store a small “access granted” flag on this device.
+          To remove it later, open your browser’s Console and run:
+          <code>localStorage.removeItem('rea_diag_paid')</code>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap" style="padding:24px 0;text-align:center;color:#c6cee6;">
+      © <span id="year"></span> Ripa Elevate Academy. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="js/paywall.js"></script>
   <script>
-    const VALID_CODES = ['ELEVATE10','ELEVATE25']; // same codes as zelle.html
-    const form = document.getElementById('unlockForm');
-    const msg = document.getElementById('msg');
-    form.addEventListener('submit', (e)=>{
-      e.preventDefault();
-      const ok = window.tryUnlockWithCode(document.getElementById('codeInput').value, VALID_CODES);
-      msg.innerHTML = ok ? '<span class="ok">Access granted. Opening diagnostic…</span>' :
-                           '<span class="err">Code not recognized. Try again.</span>';
-      if (ok) setTimeout(()=> location.href='diagnostic-test.html?access=diag', 600);
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Copy helpers
+    document.querySelectorAll('.copy').forEach(btn=>{
+      btn.addEventListener('click', async () => {
+        const val = btn.getAttribute('data-copy');
+        try {
+          await navigator.clipboard.writeText(val);
+          btn.textContent = 'Copied!';
+          setTimeout(()=>{ btn.textContent = 'Copy'; }, 1200);
+        } catch(e){
+          // fallback
+          const t = document.createElement('textarea');
+          t.value = val; document.body.appendChild(t); t.select();
+          try { document.execCommand('copy'); btn.textContent='Copied!'; } catch(_) {}
+          document.body.removeChild(t);
+          setTimeout(()=>{ btn.textContent = 'Copy'; }, 1200);
+        }
+      });
+    });
+
+    // Unlock button: set local flag and go to the diagnostic
+    document.getElementById('unlockBtn').addEventListener('click', () => {
+      try { localStorage.setItem('rea_diag_paid','1'); } catch(e){}
+      location.href = 'diagnostic-test.html?access=diag';
     });
   </script>
+
+  <noscript>
+    <div style="max-width:900px;margin:20px auto;color:#ffb4b4;text-align:center">
+      JavaScript is required to unlock. Please enable JavaScript and reload this page.
+    </div>
+  </noscript>
 </body>
 </html>
 
