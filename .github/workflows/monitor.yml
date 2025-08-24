@@ -1,0 +1,99 @@
+name: Site health & paywall monitor
+
+on:
+  schedule:
+    - cron: "0 * * * *"   # every hour
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install QA tools
+        run: |
+          npm i -g linkinator@4 html-validate@8 @lhci/cli@0.12.0 pa11y@6
+
+      # ---------- BASIC SITE PROBES ----------
+      - name: Probe home
+        run: |
+          curl -sSfL -o /dev/null https://www.ripaelevateacademy.com/
+
+      - name: Broken link scan (public site)
+        run: |
+          linkinator https://www.ripaelevateacademy.com/ --recurse --skip "mailto:|tel:|.*googleapis\.com.*" --silent
+
+      # ---------- PAYWALL INTEGRITY TESTS ----------
+      - name: Paywall – direct exam must lock (no LS flag)
+        run: |
+          final=$(curl -sSIL -o /dev/null -w '%{url_effective}' https://www.ripaelevateacademy.com/diagnostic-test.html)
+          echo "Final URL: $final"
+          if [[ "$final" != *"/lock.html"* ]]; then
+            echo "❌ Paywall bypass detected (diagnostic-test reachable without unlock)."
+            exit 1
+          fi
+
+      - name: Paywall – gate should route to lock when locked
+        run: |
+          final=$(curl -sSIL -o /dev/null -w '%{url_effective}' https://www.ripaelevateacademy.com/diagnostic-gate.html)
+          echo "Final URL: $final"
+          if [[ "$final" != *"/lock.html"* && "$final" != *"/diagnostic-gate.html"* ]]; then
+            echo "❌ Gate did not land on lock.html while locked."
+            exit 1
+          fi
+
+      - name: Paywall – gate should allow when unlocked flag present (via query)
+        run: |
+          final=$(curl -sSIL -o /dev/null -w '%{url_effective}' "https://www.ripaelevateacademy.com/diagnostic-gate.html?access=diag")
+          echo "Final URL: $final"
+          if [[ "$final" != *"/diagnostic-test.html"* ]]; then
+            echo "❌ Gate did not forward to diagnostic-test.html after unlock."
+            exit 1
+          fi
+
+      # ---------- HTML VALIDATION ----------
+      - name: Validate HTML (repo files)
+        run: |
+          html-validate "**/*.html" || (echo "❌ HTML validation failed"; exit 1)
+
+      # ---------- LIGHTHOUSE ----------
+      - name: Lighthouse (home)
+        run: |
+          lhci autorun --collect.url=https://www.ripaelevateacademy.com/ --upload.target=temporary-public-storage
+
+      # ---------- ACCESSIBILITY ----------
+      - name: Pa11y (home)
+        run: |
+          pa11y https://www.ripaelevateacademy.com/ --standard WCAG2AA
+
+  # ---------- OPEN ISSUE ON FAIL ----------
+  create_issue_on_fail:
+    needs: [check]
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create/Update Issue with failure
+        uses: dacbd/create-issue-action@v2
+        with:
+          token: ${{ secrets.BOT_TOKEN || github.token }}
+          title: "Site monitor failed – see logs"
+          body: |
+            One or more checks failed in the site monitor workflow.
+
+            - Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            - Commit: ${{ github.sha }}
+            - Trigger: ${{ github.event_name }}
+
+            Please review the failed step logs and address.
+          labels: |
+            automated
+            site-monitor
