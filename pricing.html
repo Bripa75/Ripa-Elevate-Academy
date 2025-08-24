@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pricing – Ripa Elevate Academy</title>
-  <meta name="description" content="Affordable tutoring rates for all grade levels. Transparent pricing. Optional Smart Diagnostic with one-time or subscription access.">
+  <meta name="description" content="Affordable tutoring rates for all grade levels. Transparent pricing with no hidden fees. Premium video library subscription and Smart Diagnostic access available.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
@@ -29,40 +29,14 @@
     </div>
   </header>
 
-  <!-- Smart Diagnostic Banner -->
-  <section class="section" style="text-align:center;max-width:1100px;margin:0 auto;">
-    <div style="display:inline-block;background:#ffe7d3;color:#1E2A38;padding:.35rem .8rem;border-radius:999px;font-weight:700;margin-bottom:.6rem;">
-      NEW • Smart Diagnostic Test
-    </div>
-    <h1 style="margin:.2rem 0 0;">The Future of Tutoring Is Here</h1>
-    <p style="color:#445;max-width:900px;margin:.75rem auto 0;font-size:1.05rem;">
-      Find out <strong>exactly</strong> where your student stands — <strong>down to the month</strong> — in under 40 minutes.
-      Our AI-powered diagnostic gives a real-time report with strengths, gaps, and a <strong>clear step-by-step study plan</strong>.
-      Try it once for <strong>$10</strong> or get <strong>unlimited access</strong> with our <strong>$25/month</strong> subscription (plus premium video lessons).
-    </p>
-    <div style="margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-      <!-- REPLACE with your Stripe Payment Links -->
-      <a class="btn" href="STRIPE_SUBSCRIPTION_LINK" target="_blank" rel="noopener">
-        Subscribe $25/mo (Best Value)
-      </a>
-      <a class="btn" href="STRIPE_ONETIME_LINK" target="_blank" rel="noopener">
-        Try Once – $10
-      </a>
-    </div>
-    <div style="font-size:.9rem;color:#777;margin-top:8px;">
-      Private by design • No login required • Instant PDF report
-    </div>
-  </section>
-
-  <!-- Plans -->
   <section class="section pricing alt-bg">
     <h2>Pricing Plans</h2>
-    <p>All sessions are 60 minutes and personalized to each student's needs. No contracts or hidden fees.</p>
+    <p>All sessions are 60 minutes and personalized to each student's needs. Additional time can be arranged upon request. No contracts or hidden fees.</p>
 
     <div class="cards colorful">
       <div class="card">
         <h3>Elementary</h3>
-        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">Grades 3–5</p>
+        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">Grades 2–5</p>
         <div class="price">$60/hr</div>
         <ul>
           <li>1-on-1 personalized tutoring</li>
@@ -78,9 +52,9 @@
         <div class="price">$65/hr</div>
         <ul>
           <li>Core subjects and pre-algebra</li>
-          <li>Study skills & test strategies</li>
-          <li>Homework support</li>
-          <li>Regular progress updates</li>
+          <li>Progress tracking and homework support</li>
+          <li>Study skills development</li>
+          <li>Test preparation strategies</li>
         </ul>
       </div>
 
@@ -101,10 +75,10 @@
         <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">SAT, SHSAT, College Level</p>
         <div class="price">$85/hr</div>
         <ul>
-          <li>SAT, SHSAT, State Exams prep</li>
-          <li>College Algebra, Calculus I–II</li>
-          <li>College Biology & Science Classes</li>
-          <li>Discrete Mathematics</li>
+          <li>SAT, SHSAT, State Exams preparation</li>
+          <li>College Algebra, Calculus I–III, Discrete Math</li>
+          <li><strong>College Biology & General Science</strong></li>
+          <li>Custom materials and focused prep</li>
         </ul>
       </div>
 
@@ -114,38 +88,10 @@
         <div class="price">$90/hr</div>
         <ul>
           <li>ChatGPT and AI tool mastery</li>
-          <li>Automation and productivity</li>
-          <li>Beginner-friendly coding</li>
-          <li>Digital literacy</li>
+          <li>Automation and productivity tools</li>
+          <li>Basic coding and programming</li>
+          <li>Beginner-friendly for all ages</li>
         </ul>
-      </div>
-    </div>
-
-    <h3 style="text-align:center;margin-top:3rem;color:#1E2A38;">Premium Learning Tools</h3>
-    <div class="cards colorful">
-      <div class="card">
-        <h3>Monthly Subscription</h3>
-        <div class="price">$25/month</div>
-        <ul>
-          <li>Unlimited access to the Smart Diagnostic (Math & ELA)</li>
-          <li>Instant reports with strengths, priorities & study plan</li>
-          <li>Unlimited access to premium video lessons</li>
-          <li>New content added regularly</li>
-        </ul>
-        <a class="button" href="STRIPE_SUBSCRIPTION_LINK" target="_blank" rel="noopener"
-           style="display:inline-block;margin-top:1rem;background:#F28F3B;padding:0.8rem 1.5rem;color:#fff;border-radius:8px;text-decoration:none;">
-          Subscribe Now
-        </a>
-      </div>
-
-      <div class="card">
-        <h3>One-Time Diagnostic</h3>
-        <div class="price">$10</div>
-        <p>~40 minutes. Real-time level estimates & confidence, live strengths/needs, and an instant report with a 2–4 week plan.</p>
-        <a class="button" href="STRIPE_ONETIME_LINK" target="_blank" rel="noopener"
-           style="display:inline-block;margin-top:1rem;background:#F28F3B;padding:0.8rem 1.5rem;color:#fff;border-radius:8px;text-decoration:none;">
-          Take the Diagnostic
-        </a>
       </div>
     </div>
 
@@ -154,17 +100,43 @@
       <div class="card">
         <h3>Progress Report</h3>
         <div class="price" style="font-size:1.5rem;">$20</div>
-        <p>Detailed summary of student progress with personalized feedback and next steps.</p>
+        <p>Detailed summary of student progress with personalized feedback and recommended next steps.</p>
       </div>
       <div class="card">
         <h3>Weekly Homework Packet</h3>
         <div class="price" style="font-size:1.5rem;">$15</div>
-        <p>Personalized worksheets delivered weekly to reinforce session content.</p>
+        <p>Personalized worksheets delivered weekly, tailored to reinforce session content.</p>
       </div>
       <div class="card">
         <h3>Quiz/Test Review Session</h3>
         <div class="price" style="font-size:1.5rem;">$30</div>
-        <p>Focused 30-minute session to prepare for an upcoming quiz, test, or exam.</p>
+        <p>Focused 30-minute session dedicated to preparing for an upcoming quiz, test, or exam.</p>
+      </div>
+    </div>
+
+    <h3 style="text-align:center; margin-top: 3rem; color:#1E2A38;">Premium Tools</h3>
+    <div class="cards colorful">
+      <div class="card">
+        <h3>Smart Diagnostic (One-Time)</h3>
+        <div class="price">$10</div>
+        <ul>
+          <li>Adaptive Math & ELA diagnostic (under 40 minutes)</li>
+          <li>Real-time estimated level and confidence</li>
+          <li>Clear strengths, priorities, and action plan</li>
+        </ul>
+        <a href="diagnostic-gate.html" class="button" style="display:inline-block;margin-top:1rem;background:#F28F3B;padding:0.8rem 1.5rem;color:#fff;border-radius:8px;text-decoration:none;transition:all 0.3s ease;">Start via Secure Gate</a>
+      </div>
+
+      <div class="card">
+        <h3>Premium Video Library</h3>
+        <div class="price">$25/month</div>
+        <ul>
+          <li>Unlimited access to exclusive video lessons</li>
+          <li>Math, reading, writing, exam prep, and AI skills</li>
+          <li><strong>Includes unlimited Smart Diagnostic runs</strong></li>
+          <li>New content added regularly</li>
+        </ul>
+        <a href="videos.html" class="button" style="display:inline-block;margin-top:1rem;background:#F28F3B;padding:0.8rem 1.5rem;color:#fff;border-radius:8px;text-decoration:none;transition:all 0.3s ease;">Explore Video Library</a>
       </div>
     </div>
   </section>
@@ -174,5 +146,9 @@
       <p>&copy; 2025 Ripa Elevate Academy. All rights reserved.</p>
       <div class="footer-contact">
         Phone: <a href="tel:+13479960551">347-996-0551</a> |
-
-
+        Email: <a href="mailto:ripabrian93@gmail.com">ripabrian93@gmail.com</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
