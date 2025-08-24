@@ -1,0 +1,36 @@
+name: Autofix internal links
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  autofix:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Simple internal link fixer (example)
+        run: |
+          # Example: fix /Index.html to /index.html, remove stray ?v= cache keys
+          git ls-files '*.html' | while read f; do
+            sed -i \
+              -e 's|/Index\.html|/index.html|g' \
+              -e 's|\(href="[^"]*\)\?v=[^"&]*|\1|g' \
+              "$f"
+          done
+          if ! git diff --quiet; then
+            branch=autofix/links-${{ github.run_number }}
+            git checkout -b "$branch"
+            git config user.name "site-bot"
+            git config user.email "actions@users.noreply.github.com"
+            git commit -am "Autofix: normalize internal links"
+            git push -u origin "$branch"
+            gh pr create --title "Autofix: normalize internal links" --body "Automated link normalization." || true
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.BOT_TOKEN || github.token }}
