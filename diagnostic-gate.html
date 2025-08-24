@@ -1,66 +1,27 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Access Granted – Smart Diagnostic</title>
-  <meta name="robots" content="noindex,nofollow">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-  <header>
-    <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
-      <div class="logo"><a href="index.html">Ripa Elevate Academy</a></div>
-      <nav>
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="pricing.html">Pricing</a></li>
-          <li><a href="resources.html">Resources</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <main class="section" style="text-align:center;max-width:900px;margin:0 auto;">
-    <h2>Access Granted</h2>
-    <p>Thanks! Your purchase was successful and diagnostic access is now unlocked on this device.</p>
-    <p>You’ll be redirected to the diagnostic in a moment. If not, use the button below.</p>
-    <div style="margin-top:16px;">
-      <a class="btn" href="diagnostic-test.html">Go to Diagnostic</a>
-    </div>
-
-    <noscript>
-      <p style="margin-top:1rem;color:#b33;">JavaScript is required to open the diagnostic. Please enable JavaScript and try again.</p>
-    </noscript>
-  </main>
-
-  <!-- Optional helper (also handles ?access=diag) -->
-  <script src="js/paywall.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Diagnostic Gate</title>
+  <script src="js/paywall.js?v=2"></script>
   <script>
-    // Redundant inline unlock so this page works even if paywall.js is blocked/cached
     (function () {
-      function hasParam(keys) {
-        var s = location.search;
-        return keys.some(function(k){
-          return new RegExp('(?:\\?|&)' + k + '(=|&|$)').test(s);
-        });
-      }
       try {
-        if (hasParam(['access=diag','unlock=1','success=1'])) {
-          localStorage.setItem('rea_diag_paid','1');
+        // paywall.js already handles ?access=diag and ?clear=1
+        const ok = localStorage.getItem('rea_diag_paid') === '1';
+        if (ok) {
+          location.replace('diagnostic-test.html');
+        } else {
+          location.replace('lock.html');
         }
-      } catch(e) {}
-      // Redirect after a short pause so the user sees confirmation
-      setTimeout(function(){ location.href = 'diagnostic-test.html'; }, 1000);
+      } catch (e) {
+        location.replace('lock.html');
+      }
     })();
   </script>
-
-  <footer>
-    <div class="container">
-      <p>&copy; 2025 Ripa Elevate Academy. All rights reserved.</p>
-    </div>
-  </footer>
+</head>
+<body style="font-family:system-ui;padding:24px">
+  Routing…
 </body>
 </html>
