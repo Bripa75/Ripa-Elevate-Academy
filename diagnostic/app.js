@@ -25,6 +25,8 @@ const TARGET = { math: 10, english: 10 }; // per student
 const NOTIFY_THROTTLE_MS = 2 * 60 * 1000; // 2 minutes
 const NOTIFY_TS_KEY = "ripa_notify_last_ts_v1";
 
+const LAST_CODE_KEY = "ripa_last_access_code_v1";
+
 /* ---------------- Rotation (per grade/phase) ---------------- */
 const SEEN_PREFIX = "ripa_seen_v1";
 function loadSeen(grade, phase){
@@ -52,20 +54,42 @@ function showAccessError(msg){
   el.textContent = msg || '';
 }
 
-async function redeemAccessCode(code){
-  if (!supabase) throw new Error("Supabase not configured. Update supabase-config.js");
-  const trimmed = (code || "").trim();
-  if (!trimmed) return { ok:false, reason:"Please enter your access code." };
+async function validateAccessCode(code){
+  if (!supabase) throw new Error('Supabase not configured. Update supabase-config.js');
+  const trimmed = (code || '').trim();
+  if (!trimmed) return { ok:false, reason:'Please enter your access code.' };
 
-  // Atomic: validates + marks used in one step (prevents sharing/reuse)
-  const { data, error } = await supabase.rpc("redeem_access_code", { code_input: trimmed });
+  const nowIso = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from('access_codes')
+    .select('id, code, used, expires_at')
+    .eq('code', trimmed)
+    .eq('used', false)
+    // allow expires_at null OR in the future
+    .or(`expires_at.is.null,expires_at.gt.${nowIso}`)
+    .limit(1)
+    .maybeSingle();
 
   if (error) return { ok:false, reason:`Access code check failed: ${error.message}` };
-  if (!data) return { ok:false, reason:"Code invalid, expired, or already used." };
-
+  if (!data) return { ok:false, reason:'That access code is invalid, expired, or already used.' };
   return { ok:true, code: trimmed };
 }
 
+async function consumeAccessCode(code){
+  if (!supabase || !code) return false;
+  // Mark as used BEFORE starting (prevents sharing/reuse).
+  const { data, error } = await supabase
+    .from('access_codes')
+    .update({ used: true })
+    .eq('code', code)
+    .eq('used', false)
+    .select('id')
+    .maybeSingle();
+
+  if (error) return false;
+  return !!data;
+}
 
 function flattenPassageQuestion(p, q, diffTag){
   return {
@@ -83,7 +107,6 @@ function qIndexToDiff(i){ return i<=1 ? DIFF.CORE : i<=3 ? DIFF.ON : DIFF.STRETC
 /* Build grade-scoped pools */
 function buildPools(grade){
   // Adaptive stretch: allow some next-grade items in STRETCH.
-  // Example: a strong 2nd grader can see some 3rd grade questions.
   const nextGrade = Math.min(8, grade + 1);
 
   const mathByDiff = {
@@ -136,7 +159,6 @@ function buildPools(grade){
 }
 
 /* ---------------- Difficulty buffer: 2-in-a-row to move ---------------- */
-// +2 correct in a row → bump difficulty; -2 wrong in a row → drop.
 function adjustDiff2(curDiff, buf, isCorrect){
   const nextBuf = isCorrect ? Math.min(2, buf + 1) : Math.max(-2, buf - 1);
   if (nextBuf >= 2)  return { diff: (curDiff===DIFF.CORE ? DIFF.ON : DIFF.STRETCH), buf: 0 };
@@ -146,8 +168,7 @@ function adjustDiff2(curDiff, buf, isCorrect){
 
 /* ---------------- Coverage plans ---------------- */
 function buildMathPlan(){
-  // Two of each strand → 10 slots
-  const strands = ["NO","FR","ALG","GEOM","MD"];
+  const strands = ["NO","FR","ALG","GEOM","MD"]; // Two of each → 10 slots
   const plan = [...strands, ...strands];
   for (let i = plan.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -166,8 +187,7 @@ function buildMathPlan(){
 }
 
 function buildEnglishPlan(){
-  // 4 RL + 4 RI + 2 LANG → 10 slots
-  const plan = ["RL","RL","RL","RL","RI","RI","RI","RI","LANG","LANG"];
+  const plan = ["RL","RL","RL","RL","RI","RI","RI","RI","LANG","LANG"]; // 10 slots
   for (let i = plan.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [plan[i], plan[j]] = [plan[j], plan[i]];
@@ -222,18 +242,14 @@ function validateItem(item){
 let state = null;
 
 /* ---------------- Email notify helper (Formspree hidden form) ---------------- */
-function notifyViaFormspree({ grade, mathPct, engPct, conf, mathLevel, elaLevel, summary }) {
+function notifyViaFormspree({ grade, mathPct, engPct, conf, mathLevel, elaLevel, summary, studentName, parentEmail }) {
   const form = document.getElementById('notifyForm');
-  if (!form) return; // no-op if the form isn't on the page
+  if (!form) return;
 
-  // basic client-side throttling (prevents spam / double-submits)
   try {
     const last = Number(localStorage.getItem(NOTIFY_TS_KEY) || 0);
     const now = Date.now();
-    if (now - last < NOTIFY_THROTTLE_MS) {
-      console.info("Too soon to notify again; skipping Formspree submit.");
-      return;
-    }
+    if (now - last < NOTIFY_THROTTLE_MS) return;
     localStorage.setItem(NOTIFY_TS_KEY, String(now));
   } catch {}
 
@@ -245,8 +261,9 @@ function notifyViaFormspree({ grade, mathPct, engPct, conf, mathLevel, elaLevel,
   set('notify-mathLevel', (mathLevel?.toFixed ? mathLevel.toFixed(1) : mathLevel));
   set('notify-elaLevel', (elaLevel?.toFixed ? elaLevel.toFixed(1) : elaLevel));
   set('notify-summary', summary);
-  set('notify-student', (state?.studentName || ''));
-  set('notify-parentEmail', (state?.parentEmail || ''));try { form.submit(); } catch (e) { console.warn('Formspree submit failed', e); }
+  set('notify-student', studentName || '');
+  set('notify-parentEmail', parentEmail || '');
+  try { form.submit(); } catch (e) { console.warn('Formspree submit failed', e); }
 }
 
 /* ---------------- Init ---------------- */
@@ -295,7 +312,6 @@ function el(tag, attrs={}, children=[]){
   return node;
 }
 
-// ✅ keep only THIS progress function (remove duplicates)
 function setProgress(){
   const pf = document.getElementById("progFill");
   if (!pf || !state) return;
@@ -471,7 +487,6 @@ function finishTest(){
   const mount = document.getElementById("mount");
   mount.innerHTML = "";
   mount.append(el("p",{class:"examMuted"},"Test complete. See Instant Report below."));
-  // Access code is redeemed (marked used) at START via redeemAccessCode().
 
   const pf = document.getElementById("progFill");
   if (pf) pf.style.width = "100%";
@@ -575,27 +590,8 @@ function finishTest(){
   const box = document.getElementById("stdBox");
   cb?.addEventListener("change", ()=> box.style.display = cb.checked ? "block" : "none");
 
-  // Wire up actions (Download PDF / Send to Tutor)
-  const reportInner = report.innerHTML;
-  const actionPlanText = getActionPlanText(s);
-  attachReportActions({
-    reportHtml: reportInner,
-    emailPayload: {
-      studentName: state.studentName,
-      parentEmail: state.parentEmail,
-      grade: state.grade,
-      mathPct,
-      engPct,
-      conf,
-      curMathGL,
-      curEngGL,
-      strengths,
-      priorities,
-      actionPlanText,
-    }
-  });
-
   const summary = `Diagnostic complete | Grade: ${state.grade} | Math: ${mathPct}% (level ${curMathGL.toFixed(1)}) | ELA: ${engPct}% (level ${curEngGL.toFixed(1)}) | Confidence: ${conf}%`;
+
   notifyViaFormspree({
     grade: state.grade,
     mathPct,
@@ -603,8 +599,31 @@ function finishTest(){
     conf,
     mathLevel: curMathGL,
     elaLevel: curEngGL,
-    summary
+    summary,
+    studentName: state.studentName,
+    parentEmail: state.parentEmail
   });
+
+  // Wire up PDF/email actions (optional)
+  try {
+    const actionPlanText = getActionPlanText(s);
+    attachReportActions({
+      reportHtml: report.innerHTML,
+      emailPayload: {
+        studentName: state.studentName,
+        parentEmail: state.parentEmail,
+        grade: state.grade,
+        mathPct,
+        engPct,
+        conf,
+        curMathGL,
+        curEngGL,
+        strengths,
+        priorities,
+        actionPlanText
+      }
+    });
+  } catch {}
 }
 
 function renderActionPlan(strandScores){
@@ -700,7 +719,6 @@ function openPrintWindow(html){
   w.document.write(html);
   w.document.close();
   w.focus();
-  // Give the browser a tick to render before printing
   setTimeout(()=>{ try { w.print(); } catch {} }, 200);
   return true;
 }
@@ -744,7 +762,6 @@ function attachReportActions({ reportHtml, emailPayload }) {
     }
     const subject = encodeURIComponent("Ripa Diagnostic — Instant Report");
     const body = encodeURIComponent(buildEmailBody(emailPayload));
-    // Opens the user's default mail client (works on static hosting)
     window.location.href = `mailto:${encodeURIComponent(to)}?subject=${subject}&body=${body}`;
   });
 }
@@ -760,12 +777,23 @@ export function boot(){
   const mount = document.getElementById("mount");
   const report = document.getElementById("report");
 
-  startBtn?.addEventListener("click", ()=>{
-    const grade = Number(gradeSel.value || 5);
+  // Prefill access code from URL (?code=XXXX) OR last-used localStorage.
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const urlCode = (params.get('code') || '').trim();
+    const lastCode = (localStorage.getItem(LAST_CODE_KEY) || '').trim();
+    if (accessCodeEl) {
+      if (urlCode) accessCodeEl.value = urlCode;
+      else if (lastCode) accessCodeEl.value = lastCode;
+    }
+  } catch {}
+
+  startBtn?.addEventListener("click", async ()=>{
+    const grade = Number(gradeSel?.value || 5);
     const studentName = (studentNameEl?.value || "").trim();
     const parentEmail = (parentEmailEl?.value || "").trim();
     const enteredCode = (accessCodeEl?.value || "").trim();
-    const consentOk = !!consentEl?.checked || !parentEmail; // if no email, skip consent requirement
+    const consentOk = !!consentEl?.checked || !parentEmail;
     if (parentEmail && !consentOk) {
       alert("Please confirm you have permission to email this report to a parent/guardian.");
       return;
@@ -773,33 +801,36 @@ export function boot(){
 
     showAccessError("");
 
-    const begin = ()=>{
-      currentAccessCode = enteredCode || null;
-      initState(grade, studentName, parentEmail);
-      report.innerHTML = "";
-      setProgress();
-      renderCurrent(mount);
-    };
-
-    // Supabase is required when access codes are enabled.
     if (!supabase) {
-      showAccessError('Setup required: configure Supabase keys in supabase-config.js');
+      showAccessError('Setup required: Supabase not configured. Update supabase-config.js');
       return;
     }
-redeemAccessCode(enteredCode).then((res) => {
-      if (!res.ok) {
-        showAccessError(res.reason);
-        return;
-      }
-      currentAccessCode = res.code;
-      begin();
-    }).catch((err) => {
-      showAccessError(err?.message || 'Access code check failed.');
-    });
+
+    // Remember code for refresh / Back-to-Test.
+    try { if (enteredCode) localStorage.setItem(LAST_CODE_KEY, enteredCode); } catch {}
+
+    const ok = await validateAccessCode(enteredCode);
+    if (!ok.ok) {
+      showAccessError(ok.reason);
+      return;
+    }
+
+    const redeemed = await consumeAccessCode(ok.code);
+    if (!redeemed) {
+      showAccessError("Code invalid, expired, or already used.");
+      return;
+    }
+
+    currentAccessCode = ok.code;
+
+    initState(grade, studentName, parentEmail);
+    report.innerHTML = "";
+    setProgress();
+    renderCurrent(mount);
   });
 }
 
-// ✅ self-boot so the Start handler is always attached
+// self-boot so the Start handler is always attached
 if (typeof window !== 'undefined') {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
@@ -807,4 +838,3 @@ if (typeof window !== 'undefined') {
     boot();
   }
 }
-
