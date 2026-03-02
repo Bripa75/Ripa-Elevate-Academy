@@ -11,7 +11,7 @@
         // paywall.js already handles ?access=diag and ?clear=1
         const ok = localStorage.getItem('rea_diag_paid') === '1';
         if (ok) {
-          location.replace('diagnostic-test.html');
+          location.replace('diagnostic/diagnostic-test.html');
         } else {
           location.replace('lock.html');
         }
