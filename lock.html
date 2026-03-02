@@ -8,7 +8,19 @@
   <!-- Optional: your site stylesheet (keeps branding consistent) -->
   <link rel="stylesheet" href="css/style.css"/>
 
-  <style>
+  
+  <!-- If this device/browser is already unlocked, skip this page and go straight to the test. -->
+  <script>
+    (function () {
+      try {
+        var key = "ripa_diag_unlocked_v1";
+        if (localStorage.getItem(key) === "1") {
+          window.location.replace("./diagnostic/diagnostic-test.html");
+        }
+      } catch (e) {}
+    })();
+  </script>
+<style>
     /* Small, self-contained styling that works even without style.css */
     :root{
       --bg:#0e1320; --card:rgba(255,255,255,.06); --stroke:rgba(255,255,255,.12);
@@ -89,14 +101,14 @@
             <input id="unlockCode" type="text" placeholder="Enter unlock code" inputmode="text" required />
             <div class="line">
               <button class="btn primary" type="submit">Unlock &amp; Start</button>
-              <a class="btn" href="diagnostic-test.html">Back to Test</a>
+              <a class="btn" href="./diagnostic/diagnostic-test.html">Back to Test</a>
             </div>
             <div id="msg" class="hint"></div>
           </form>
 
           <div class="hint" style="margin-top:12px">
             Having trouble? Text <a href="sms:+13479960551">347-996-0551</a> for help.  
-            To reset this device later, visit <code>diagnostic-test.html?clear=1</code>.
+            To reset this device later, visit <code>diagnostic-gate.html?clear=1</code>.
           </div>
         </div>
       </div>
@@ -137,7 +149,7 @@
       if (ok) {
         msg.innerHTML = '<span class="ok">Access granted. Redirecting…</span>';
         // small pause for UX, then go to the test
-        setTimeout(()=>{ location.href = 'diagnostic-test.html'; }, 800);
+        setTimeout(()=>{ location.href = './diagnostic/diagnostic-test.html'; }, 800);
       } else {
         msg.innerHTML = '<span class="err">That code was not recognized. Please double-check or contact us.</span>';
       }
