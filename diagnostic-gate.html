@@ -4,17 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Diagnostic Gate</title>
-  <script src="js/paywall.js?v=2"></script>
   <script>
     (function () {
       try {
-        // paywall.js already handles ?access=diag and ?clear=1
-        const ok = localStorage.getItem('rea_diag_paid') === '1';
-        if (ok) {
-          location.replace('diagnostic/diagnostic-test.html');
-        } else {
-          location.replace('lock.html');
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('clear') === '1') {
+          try { localStorage.removeItem('rea_diag_last_code'); } catch {}
         }
+        const code = (params.get('code') || '').trim();
+        if (code) {
+          location.replace(`diagnostic/diagnostic-test.html?code=${encodeURIComponent(code)}`);
+          return;
+        }
+        // Default: send the user to lock, which validates the code in Supabase
+        location.replace('lock.html');
       } catch (e) {
         location.replace('lock.html');
       }

@@ -106,6 +106,25 @@
     </p>
   </noscript>
 
+  <!-- Prefill access code if provided via ?code=... (from lock.html) -->
+  <script type="module">
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const code = (params.get('code') || '').trim();
+      if (code) {
+        const input = document.getElementById('accessCode');
+        if (input) input.value = code;
+      } else {
+        // optional convenience: remember last code used on this device
+        const last = (localStorage.getItem('rea_diag_last_code') || '').trim();
+        if (last) {
+          const input = document.getElementById('accessCode');
+          if (input) input.value = last;
+        }
+      }
+    } catch {}
+  </script>
+
   <!-- Load app.js directly -->
   <script type="module" src="./app.js"></script>
 </body>

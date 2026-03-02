@@ -9,13 +9,13 @@
   <link rel="stylesheet" href="css/style.css"/>
 
   
-  <!-- If this device/browser is already unlocked, skip this page and go straight to the test. -->
+  <!-- If a code was already entered on this device, skip this page and go straight to the test. -->
   <script>
     (function () {
       try {
-        var key = "ripa_diag_unlocked_v1";
-        if (localStorage.getItem(key) === "1") {
-          window.location.replace("./diagnostic/diagnostic-test.html");
+        var saved = (localStorage.getItem('rea_diag_last_code') || '').trim();
+        if (saved) {
+          window.location.replace("./diagnostic/diagnostic-test.html?code=" + encodeURIComponent(saved));
         }
       } catch (e) {}
     })();
@@ -108,7 +108,7 @@
 
           <div class="hint" style="margin-top:12px">
             Having trouble? Text <a href="sms:+13479960551">347-996-0551</a> for help.  
-            To reset this device later, visit <code>diagnostic-gate.html?clear=1</code>.
+            To clear a saved code on this device later, visit <code>diagnostic-gate.html?clear=1</code>.
           </div>
         </div>
       </div>
@@ -117,9 +117,10 @@
 
   <footer>© <span id="year"></span> Ripa Elevate Academy · Private by design</footer>
 
-  <!-- Paywall helper (must be loaded before we call tryUnlockWithCode) -->
-  <script src="js/paywall.js"></script>
-  <script>
+  <!-- Supabase: validate one-time access codes (same code used to start the test) -->
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+    import { SUPABASE_URL, SUPABASE_ANON_KEY } from "./diagnostic/supabase-config.js";
     // Year
     document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -127,31 +128,70 @@
     const urlCode = new URLSearchParams(location.search).get('code');
     if (urlCode) document.getElementById('unlockCode').value = urlCode;
 
-    // 🔑 Replace these with codes you issue to families
-    // You can keep several active codes at once, or rotate them weekly.
-    const VALID_CODES = [
-      'ripa-10',             // example
-      'elevate-guest',       // example
-      // add/remove codes as needed
-    ];
+    // Supabase client
+    const _looksLikePlaceholder = (v) => !v || typeof v !== "string" || v.includes("PASTE_YOUR_SUPABASE");
+    const supabase =
+      !_looksLikePlaceholder(SUPABASE_URL) &&
+      !_looksLikePlaceholder(SUPABASE_ANON_KEY) &&
+      SUPABASE_URL.startsWith("http") &&
+      SUPABASE_ANON_KEY.length > 20
+        ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+        : null;
 
     const form = document.getElementById('unlockForm');
     const input = document.getElementById('unlockCode');
     const msg   = document.getElementById('msg');
 
-    form.addEventListener('submit', function (e) {
+    async function validateCode(code){
+      if (!supabase) throw new Error('Supabase not configured. Update diagnostic/supabase-config.js');
+      const trimmed = (code || '').trim();
+      if (!trimmed) return { ok:false, reason:'Please enter your unlock code.' };
+
+      const { data, error } = await supabase
+        .from('access_codes')
+        .select('code, used, expires_at')
+        .eq('code', trimmed)
+        .limit(1)
+        .maybeSingle();
+
+      if (error) return { ok:false, reason:`Code check failed: ${error.message}` };
+      if (!data) return { ok:false, reason:'Code invalid, expired, or already used.' };
+
+      // If expires_at is set and in the past, treat as invalid
+      if (data.expires_at) {
+        const exp = new Date(data.expires_at);
+        if (!Number.isNaN(exp.getTime()) && exp.getTime() <= Date.now()) {
+          return { ok:false, reason:'Code invalid, expired, or already used.' };
+        }
+      }
+
+      // IMPORTANT: we do NOT mark used here — app.js will consume at start.
+      if (data.used) return { ok:false, reason:'Code invalid, expired, or already used.' };
+      return { ok:true, code: trimmed };
+    }
+
+    form.addEventListener('submit', async function (e) {
       e.preventDefault();
       const code = input.value.trim();
       msg.textContent = 'Checking…';
 
-      // Uses window.tryUnlockWithCode from js/paywall.js
-      const ok = window.tryUnlockWithCode(code, VALID_CODES);
-      if (ok) {
+      try {
+        const res = await validateCode(code);
+        if (!res.ok) {
+          msg.innerHTML = `<span class="err">${res.reason}</span>`;
+          return;
+        }
+
+        // Remember the code for this device/browser (optional convenience)
+        try { localStorage.setItem('rea_diag_last_code', res.code); } catch {}
+
         msg.innerHTML = '<span class="ok">Access granted. Redirecting…</span>';
-        // small pause for UX, then go to the test
-        setTimeout(()=>{ location.href = './diagnostic/diagnostic-test.html'; }, 800);
-      } else {
-        msg.innerHTML = '<span class="err">That code was not recognized. Please double-check or contact us.</span>';
+        setTimeout(()=>{
+          // Prefill the code on the test page
+          location.href = `./diagnostic/diagnostic-test.html?code=${encodeURIComponent(res.code)}`;
+        }, 500);
+      } catch (err) {
+        msg.innerHTML = `<span class="err">${err?.message || 'Code check failed.'}</span>`;
       }
     });
   </script>
