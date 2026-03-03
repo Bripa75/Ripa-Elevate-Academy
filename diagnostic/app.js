@@ -56,33 +56,38 @@ function showAccessError(msg){
 
 async function validateAccessCode(code){
   if (!supabase) throw new Error('Supabase not configured. Update supabase-config.js');
-  const trimmed = (code || '').trim();
+  const trimmed = (code || '').trim().toUpperCase();
   if (!trimmed) return { ok:false, reason:'Please enter your access code.' };
-
-  const nowIso = new Date().toISOString();
 
   const { data, error } = await supabase
     .from('access_codes')
     .select('id, code, used, expires_at')
-    .eq('code', trimmed)
-    .eq('used', false)
-    // allow expires_at null OR in the future
-    .or(`expires_at.is.null,expires_at.gt.${nowIso}`)
+    .ilike('code', trimmed)
     .limit(1)
     .maybeSingle();
 
   if (error) return { ok:false, reason:`Access code check failed: ${error.message}` };
   if (!data) return { ok:false, reason:'That access code is invalid, expired, or already used.' };
+
+  if (data.expires_at) {
+    const exp = new Date(data.expires_at);
+    if (!Number.isNaN(exp.getTime()) && exp.getTime() <= Date.now()) {
+      return { ok:false, reason:'That access code is invalid, expired, or already used.' };
+    }
+  }
+
+  if (data.used) return { ok:false, reason:'That access code is invalid, expired, or already used.' };
   return { ok:true, code: trimmed };
 }
 
 async function consumeAccessCode(code){
   if (!supabase || !code) return false;
+  const c = String(code).trim().toUpperCase();
   // Mark as used BEFORE starting (prevents sharing/reuse).
   const { data, error } = await supabase
     .from('access_codes')
     .update({ used: true })
-    .eq('code', code)
+    .ilike('code', c)
     .eq('used', false)
     .select('id')
     .maybeSingle();
@@ -90,6 +95,7 @@ async function consumeAccessCode(code){
   if (error) return false;
   return !!data;
 }
+
 
 function flattenPassageQuestion(p, q, diffTag){
   return {
@@ -242,7 +248,7 @@ function validateItem(item){
 let state = null;
 
 /* ---------------- Email notify helper (Formspree hidden form) ---------------- */
-function notifyViaFormspree({ grade, mathPct, engPct, conf, mathLevel, elaLevel, summary, studentName, parentEmail, wrongMath, wrongEla, wrongAll }) {
+function notifyViaFormspree({ grade, mathPct, engPct, conf, mathLevel, elaLevel, summary, studentName, parentEmail }) {
   const form = document.getElementById('notifyForm');
   if (!form) return;
 
@@ -263,9 +269,6 @@ function notifyViaFormspree({ grade, mathPct, engPct, conf, mathLevel, elaLevel,
   set('notify-summary', summary);
   set('notify-student', studentName || '');
   set('notify-parentEmail', parentEmail || '');
-  set('notify-wrongMath', wrongMath || '');
-  set('notify-wrongEla', wrongEla || '');
-  set('notify-wrongAll', wrongAll || '');
   try { form.submit(); } catch (e) { console.warn('Formspree submit failed', e); }
 }
 
@@ -298,10 +301,7 @@ function initState(grade, studentName, parentEmail){
     mathPlan: buildMathPlan(),
     mathPlanIdx: 0,
     engPlan: buildEnglishPlan(),
-    engPlanIdx: 0,
-    wrongMath: [],
-    wrongEla: [],
-    wrongAll: []
+    engPlanIdx: 0
   };
 }
 
@@ -399,15 +399,6 @@ function answer(chosen){
   if (!state || !state.current) return;
   const item = state.current;
   const isCorrect = String(chosen) === String(item.answer);
-  // Track wrong questions (so Formspree/admin report can show what was missed)
-  if (!isCorrect) {
-    const qid = (item.id ?? item.qid ?? item.key ?? item.code ?? `${state.phase}-${state.answeredInPhase+1}`);
-    const meta = state.phase === "math" ? (item.strand || "NO") : (item.domain || "RL");
-    const detail = `${qid} (${meta}) | chosen:${chosen} | correct:${item.answer}`;
-    state.wrongAll.push(detail);
-    if (state.phase === "math") state.wrongMath.push(detail);
-    else state.wrongEla.push(detail);
-  }
   state.total++; if (isCorrect) state.correct++;
 
   if (state.phase==="math"){
@@ -616,10 +607,7 @@ function finishTest(){
     elaLevel: curEngGL,
     summary,
     studentName: state.studentName,
-    parentEmail: state.parentEmail,
-    wrongMath: (state.wrongMath || []).join(" \n "),
-    wrongEla: (state.wrongEla || []).join(" \n "),
-    wrongAll: (state.wrongAll || []).join(" \n ")
+    parentEmail: state.parentEmail
   });
 
   // Wire up PDF/email actions (optional)

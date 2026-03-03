@@ -11,7 +11,7 @@
 <script>
     (function () {
       try {
-        var saved = (localStorage.getItem('rea_diag_last_code') || '').trim();
+        var saved = (localStorage.getItem('rea_diag_last_code') || '').trim().toUpperCase();
         if (saved) {
           window.location.replace("./diagnostic/diagnostic-test.html?code=" + encodeURIComponent(saved));
         }
@@ -116,7 +116,7 @@
 
     // OPTIONAL: allow ?code=XXXX to prefill the box (useful when you text parents a link)
     const urlCode = new URLSearchParams(location.search).get('code');
-    if (urlCode) document.getElementById('unlockCode').value = urlCode;
+    if (urlCode) document.getElementById('unlockCode').value = String(urlCode).trim().toUpperCase();
 
     // Supabase client
     const _looksLikePlaceholder = (v) => !v || typeof v !== "string" || v.includes("PASTE_YOUR_SUPABASE");
@@ -134,7 +134,7 @@
 
     async function validateCode(code){
       if (!supabase) throw new Error('Supabase not configured. Update diagnostic/supabase-config.js');
-      const trimmed = (code || '').trim();
+      const trimmed = (code || '').trim().toUpperCase();
       if (!trimmed) return { ok:false, reason:'Please enter your unlock code.' };
 
       const { data, error } = await supabase
@@ -162,7 +162,7 @@
 
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
-      const code = input.value.trim();
+      const code = input.value.trim().toUpperCase();
       msg.textContent = 'Checking…';
 
       try {
