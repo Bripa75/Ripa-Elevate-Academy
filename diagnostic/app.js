@@ -25,7 +25,7 @@ const TARGET = { math: 10, english: 10 }; // per student
 const NOTIFY_THROTTLE_MS = 2 * 60 * 1000; // 2 minutes
 const NOTIFY_TS_KEY = "ripa_notify_last_ts_v1";
 
-const LAST_CODE_KEY = "ripa_last_access_code_v1";
+const LAST_CODE_KEY = "rea_diag_last_code";
 
 /* ---------------- Rotation (per grade/phase) ---------------- */
 const SEEN_PREFIX = "ripa_seen_v1";

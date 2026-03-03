@@ -1,3 +1,4 @@
+/* DEPRECATED: site now uses Supabase code gating (lock.html + diagnostic/app.js). Kept for history; safe to delete if unused. */
 // /js/paywall.js
 (function () {
   // Helper to grab query params
