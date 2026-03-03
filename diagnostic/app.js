@@ -242,7 +242,7 @@ function validateItem(item){
 let state = null;
 
 /* ---------------- Email notify helper (Formspree hidden form) ---------------- */
-function notifyViaFormspree({ grade, mathPct, engPct, conf, mathLevel, elaLevel, summary, studentName, parentEmail }) {
+function notifyViaFormspree({ grade, mathPct, engPct, conf, mathLevel, elaLevel, summary, studentName, parentEmail, wrongMath, wrongEla, wrongAll }) {
   const form = document.getElementById('notifyForm');
   if (!form) return;
 
@@ -263,6 +263,9 @@ function notifyViaFormspree({ grade, mathPct, engPct, conf, mathLevel, elaLevel,
   set('notify-summary', summary);
   set('notify-student', studentName || '');
   set('notify-parentEmail', parentEmail || '');
+  set('notify-wrongMath', wrongMath || '');
+  set('notify-wrongEla', wrongEla || '');
+  set('notify-wrongAll', wrongAll || '');
   try { form.submit(); } catch (e) { console.warn('Formspree submit failed', e); }
 }
 
@@ -295,7 +298,10 @@ function initState(grade, studentName, parentEmail){
     mathPlan: buildMathPlan(),
     mathPlanIdx: 0,
     engPlan: buildEnglishPlan(),
-    engPlanIdx: 0
+    engPlanIdx: 0,
+    wrongMath: [],
+    wrongEla: [],
+    wrongAll: []
   };
 }
 
@@ -393,6 +399,15 @@ function answer(chosen){
   if (!state || !state.current) return;
   const item = state.current;
   const isCorrect = String(chosen) === String(item.answer);
+  // Track wrong questions (so Formspree/admin report can show what was missed)
+  if (!isCorrect) {
+    const qid = (item.id ?? item.qid ?? item.key ?? item.code ?? `${state.phase}-${state.answeredInPhase+1}`);
+    const meta = state.phase === "math" ? (item.strand || "NO") : (item.domain || "RL");
+    const detail = `${qid} (${meta}) | chosen:${chosen} | correct:${item.answer}`;
+    state.wrongAll.push(detail);
+    if (state.phase === "math") state.wrongMath.push(detail);
+    else state.wrongEla.push(detail);
+  }
   state.total++; if (isCorrect) state.correct++;
 
   if (state.phase==="math"){
@@ -601,7 +616,10 @@ function finishTest(){
     elaLevel: curEngGL,
     summary,
     studentName: state.studentName,
-    parentEmail: state.parentEmail
+    parentEmail: state.parentEmail,
+    wrongMath: (state.wrongMath || []).join(" \n "),
+    wrongEla: (state.wrongEla || []).join(" \n "),
+    wrongAll: (state.wrongAll || []).join(" \n ")
   });
 
   // Wire up PDF/email actions (optional)
