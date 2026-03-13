@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<title>Access Granted – Ripa Elevate Academy</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<style>
+    body{font-family:Poppins,system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:0;display:grid;place-items:center;min-height:100dvh;background:#0e1320;color:#f3f6ff}
+    .card{max-width:720px;padding:28px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);text-align:center}
+    a.btn{display:inline-block;margin-top:14px;padding:12px 20px;border-radius:12px;background:#F28F3B;color:#fff;text-decoration:none;font-weight:600}
+  </style>
+<meta content="Redirecting you into the Smart Diagnostic with your access code." name="description"/><meta content="#0a0a0a" name="theme-color"/><meta content="Access Granted – Ripa Elevate Academy" property="og:title"/><meta content="Redirecting you into the Smart Diagnostic with your access code." property="og:description"/><meta content="website" property="og:type"/><meta content="Brian_Square_Profile.png" property="og:image"/><meta content="summary_large_image" name="twitter:card"/><meta content="Access Granted – Ripa Elevate Academy" name="twitter:title"/><meta content="Redirecting you into the Smart Diagnostic with your access code." name="twitter:description"/><meta content="Brian_Square_Profile.png" name="twitter:image"/><link href="Brian_Square_Profile.png" rel="icon" type="image/png"/></head>
+<body>
+<div class="card">
+<h2>✅ Payment successful</h2>
+<p>Your diagnostic access is now unlocked on this device.</p>
+<p>Redirecting you to the test…</p>
+<p>If nothing happens, click below:</p>
+<p><a class="btn" href="diagnostic-gate.html">Go to Diagnostic</a></p>
+</div>
+<script>
+    // New flow (Supabase code-gated):
+    // If this page is called with ?code=XXXX, we store it and send the user straight into the test.
+    (function () {
+      try {
+        const params = new URLSearchParams(location.search);
+        const code = (params.get('code') || '').trim();
+        if (code) {
+          try { localStorage.setItem('rea_diag_last_code', code); } catch(e) {}
+          setTimeout(()=>{ location.href = 'diagnostic/diagnostic-test.html?code=' + encodeURIComponent(code); }, 700);
+          return;
+        }
+      } catch (e) {}
+      // Fallback: send to the lock page so they can enter their code
+      setTimeout(()=>{ location.href = 'lock.html'; }, 900);
+    })();
+  </script>
+</body>
+</html>

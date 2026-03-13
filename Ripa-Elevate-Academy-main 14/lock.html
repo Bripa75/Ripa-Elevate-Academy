@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Unlock the Smart Diagnostic – Ripa Elevate Academy</title>
+<!-- Optional: your site stylesheet (keeps branding consistent) -->
+<link href="css/style.css" rel="stylesheet"/>
+<!-- If a code was already entered on this device, skip this page and go straight to the test. -->
+<script>
+    (function () {
+      try {
+        var saved = (localStorage.getItem('rea_diag_last_code') || '').trim().toUpperCase();
+        if (saved) {
+          window.location.replace("./diagnostic/diagnostic-test.html?code=" + encodeURIComponent(saved));
+        }
+      } catch (e) {}
+    })();
+  </script>
+<style>
+    /* Small, self-contained styling that works even without style.css */
+    :root{
+      --bg:#0e1320; --card:rgba(255,255,255,.06); --stroke:rgba(255,255,255,.12);
+      --text:#f3f6ff; --muted:#b7c0d9; --accent:#F28F3B;
+    }
+    body{margin:0;font-family:Poppins,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    header{border-bottom:1px solid var(--stroke)}
+    header .container{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;max-width:1100px;margin:0 auto}
+    header .logo a{font-weight:700;text-decoration:none;color:var(--text)}
+    header nav a{color:var(--text);opacity:.9;text-decoration:none;margin-left:14px}
+    .section{padding:40px 20px}
+    .container{max-width:960px;margin:0 auto}
+    h1{font-size:clamp(28px,4.6vw,42px);margin:0 0 8px}
+    p.lead{color:var(--muted);margin:0 0 22px}
+    .card{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:18px}
+    .grid{display:grid;gap:14px}
+    @media(min-width:860px){.grid{grid-template-columns:1.05fr .95fr}}
+    .step h3{margin:0 0 8px}
+    .k{color:var(--muted);font-size:14px}
+    .line{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0}
+    .pill{border:1px solid var(--stroke);border-radius:999px;padding:6px 10px;background:rgba(255,255,255,.06)}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:11px 16px;border-radius:12px;border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--text);text-decoration:none;font-weight:600;cursor:pointer}
+    .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    input[type="text"]{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--stroke);background:rgba(255,255,255,.08);color:var(--text);font-weight:600;letter-spacing:.5px}
+    .hint{color:var(--muted);font-size:13px;margin-top:8px}
+    .ok{color:#67e8a3}
+    .err{color:#ff9494}
+    footer{border-top:1px solid var(--stroke);text-align:center;color:var(--muted);padding:28px 0;margin-top:26px}
+  </style>
+<meta content="Enter your access code to start the Smart Diagnostic. If you need a code, request one and we’ll help you get set up." name="description"/><meta content="#0a0a0a" name="theme-color"/><meta content="Unlock the Smart Diagnostic – Ripa Elevate Academy" property="og:title"/><meta content="Enter your access code to start the Smart Diagnostic. If you need a code, request one and we’ll help you get set up." property="og:description"/><meta content="website" property="og:type"/><meta content="Brian_Square_Profile.png" property="og:image"/><meta content="summary_large_image" name="twitter:card"/><meta content="Unlock the Smart Diagnostic – Ripa Elevate Academy" name="twitter:title"/><meta content="Enter your access code to start the Smart Diagnostic. If you need a code, request one and we’ll help you get set up." name="twitter:description"/><meta content="Brian_Square_Profile.png" name="twitter:image"/><link href="Brian_Square_Profile.png" rel="icon" type="image/png"/></head>
+<body>
+<header>
+<div class="container">
+<div class="logo"><a href="index.html">Ripa Elevate Academy</a></div>
+<nav>
+<a href="index.html">Home</a>
+<a href="pricing.html">Pricing</a>
+<a href="contact.html">Contact</a>
+</nav>
+</div>
+</header>
+<main class="section">
+<div class="container">
+<h1>Unlock the Smart Diagnostic</h1>
+<p class="lead">Pay once with Zelle, then enter your unlock code to enable this device and start the test immediately.</p>
+<div class="grid">
+<!-- STEP 1 -->
+<div class="card step">
+<h3>Step 1 — Send Zelle Payment</h3>
+<p class="k">Choose a plan, then pay via Zelle. Add your student’s name in the note.</p>
+<div class="line">
+<span class="pill"><b>$19</b> — Diagnostic access + instant report</span>
+<span class="pill"><b>$59</b> — Diagnostic + 15‑minute review call</span>
+</div>
+<div class="line">
+<span class="pill">Memo: “Diagnostic + Student Name + Plan ($19 or $59)”</span>
+</div>
+<div class="line">
+<strong>Phone:</strong>
+<a class="btn" href="sms:+13479960551?&amp;body=Hi%20Ripa%20Elevate%2C%20I%20sent%20the%20Zelle%20for%20the%20diagnostic.">+1 (347) 996-0551</a>
+</div>
+<div class="line">
+<strong>Email:</strong>
+<a class="btn" href="mailto:ripabrian93@gmail.com?subject=Zelle%20payment%20for%20Diagnostic&amp;body=Hi%20Ripa%20Elevate%2C%20I%20sent%20the%20Zelle%20for%20the%20diagnostic.">ripabrian93@gmail.com</a>
+</div>
+<p class="hint">After you send payment, you’ll receive a short <b>unlock code</b>.</p>
+</div>
+<!-- STEP 2 -->
+<div class="card step">
+<h3>Step 2 — Enter Unlock Code</h3>
+<p class="k">Paste the code you received and click <b>Unlock</b>. Access is tied to this device/browser.</p>
+<form autocomplete="off" id="unlockForm">
+<input id="unlockCode" inputmode="text" placeholder="Enter unlock code" required="" type="text"/>
+<div class="line">
+<button class="btn primary" type="submit">Unlock &amp; Start</button>
+<a class="btn" href="./diagnostic/diagnostic-test.html">Back to Test</a>
+</div>
+<div class="hint" id="msg"></div>
+</form>
+<div class="hint" style="margin-top:12px">
+            Having trouble? Text <a href="sms:+13479960551">347-996-0551</a> for help.  
+            To clear a saved code on this device later, visit <code>diagnostic-gate.html?clear=1</code>.
+          </div>
+</div>
+</div>
+</div>
+</main>
+<footer>© <span id="year"></span> Ripa Elevate Academy · Private by design</footer>
+<!-- Supabase: validate one-time access codes (same code used to start the test) -->
+<script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+    import { SUPABASE_URL, SUPABASE_ANON_KEY } from "./diagnostic/supabase-config.js";
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // OPTIONAL: allow ?code=XXXX to prefill the box (useful when you text parents a link)
+    const urlCode = new URLSearchParams(location.search).get('code');
+    if (urlCode) document.getElementById('unlockCode').value = String(urlCode).trim().toUpperCase();
+
+    // Supabase client
+    const _looksLikePlaceholder = (v) => !v || typeof v !== "string" || v.includes("PASTE_YOUR_SUPABASE");
+    const supabase =
+      !_looksLikePlaceholder(SUPABASE_URL) &&
+      !_looksLikePlaceholder(SUPABASE_ANON_KEY) &&
+      SUPABASE_URL.startsWith("http") &&
+      SUPABASE_ANON_KEY.length > 20
+        ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+        : null;
+
+    const form = document.getElementById('unlockForm');
+    const input = document.getElementById('unlockCode');
+    const msg   = document.getElementById('msg');
+
+    async function validateCode(code){
+      if (!supabase) throw new Error('Supabase not configured. Update diagnostic/supabase-config.js');
+      const trimmed = (code || '').trim().toUpperCase();
+      if (!trimmed) return { ok:false, reason:'Please enter your unlock code.' };
+
+      const { data, error } = await supabase
+        .from('access_codes')
+        .select('code, used, expires_at')
+        .eq('code', trimmed)
+        .limit(1)
+        .maybeSingle();
+
+      if (error) return { ok:false, reason:`Code check failed: ${error.message}` };
+      if (!data) return { ok:false, reason:'Code invalid, expired, or already used.' };
+
+      // If expires_at is set and in the past, treat as invalid
+      if (data.expires_at) {
+        const exp = new Date(data.expires_at);
+        if (!Number.isNaN(exp.getTime()) && exp.getTime() <= Date.now()) {
+          return { ok:false, reason:'Code invalid, expired, or already used.' };
+        }
+      }
+
+      // IMPORTANT: we do NOT mark used here — app.js will consume at start.
+      if (data.used) return { ok:false, reason:'Code invalid, expired, or already used.' };
+      return { ok:true, code: trimmed };
+    }
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const code = input.value.trim().toUpperCase();
+      msg.textContent = 'Checking…';
+
+      try {
+        const res = await validateCode(code);
+        if (!res.ok) {
+          msg.innerHTML = `<span class="err">${res.reason}</span>`;
+          return;
+        }
+
+        // Remember the code for this device/browser (optional convenience)
+        try { localStorage.setItem('rea_diag_last_code', res.code); } catch {}
+
+        msg.innerHTML = '<span class="ok">Access granted. Redirecting…</span>';
+        setTimeout(()=>{
+          // Prefill the code on the test page
+          location.href = `./diagnostic/diagnostic-test.html?code=${encodeURIComponent(res.code)}`;
+        }, 500);
+      } catch (err) {
+        msg.innerHTML = `<span class="err">${err?.message || 'Code check failed.'}</span>`;
+      }
+    });
+  </script>
+</body>
+</html>

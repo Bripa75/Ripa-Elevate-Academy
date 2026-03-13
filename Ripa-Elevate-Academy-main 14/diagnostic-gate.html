@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Smart Diagnostic – Ripa Elevate Academy</title>
+<script>
+    (function () {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('clear') === '1') {
+          try { localStorage.removeItem('rea_diag_last_code'); } catch {}
+        }
+        const code = (params.get('code') || '').trim();
+        if (code) {
+          location.replace(`diagnostic/diagnostic-test.html?code=${encodeURIComponent(code)}`);
+          return;
+        }
+        // Default: send the user to lock, which validates the code in Supabase
+        location.replace('lock.html');
+      } catch (e) {
+        location.replace('lock.html');
+      }
+    })();
+  </script>
+<meta content="Start the Smart Diagnostic flow and get routed to the correct test experience." name="description"/><meta content="#0a0a0a" name="theme-color"/><meta content="Smart Diagnostic – Ripa Elevate Academy" property="og:title"/><meta content="Start the Smart Diagnostic flow and get routed to the correct test experience." property="og:description"/><meta content="website" property="og:type"/><meta content="Brian_Square_Profile.png" property="og:image"/><meta content="summary_large_image" name="twitter:card"/><meta content="Smart Diagnostic – Ripa Elevate Academy" name="twitter:title"/><meta content="Start the Smart Diagnostic flow and get routed to the correct test experience." name="twitter:description"/><meta content="Brian_Square_Profile.png" name="twitter:image"/><link href="Brian_Square_Profile.png" rel="icon" type="image/png"/></head>
+<body style="font-family:system-ui;padding:24px">
+  Routing…
+</body>
+</html>
