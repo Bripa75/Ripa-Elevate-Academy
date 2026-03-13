@@ -1,58 +1,53 @@
-# Ripa Elevate Academy – Tutoring Website
+# Flawless Implementation Corp. Website
 
-Welcome to the official GitHub repository for **Ripa Elevate Academy**, a one-on-one Zoom-based tutoring service offering personalized academic support from Grades 2 through college.
+This is a **one-page GitHub Pages-ready website** for Flawless Implementation Corp.
 
----
+## Included
+- One-page scrolling website
+- Your uploaded logo included locally in `assets/logo.png`
+- Phone number updated to **(917) 225-5908**
+- No LinkedIn section
+- Expanded sections:
+  - Hero
+  - About
+  - Services
+  - Industries
+  - Process
+  - Infrastructure gallery
+  - FAQ
+  - Contact
 
-## 🌟 About the Project
+## Files
+- `index.html`
+- `assets/style.css`
+- `assets/script.js`
+- `assets/logo.png`
 
-This website was built to showcase the services, pricing, and booking information for Ripa Elevate Academy. The goal is to provide a **clean, modern, and parent-friendly** platform that clearly explains what we offer, how we help students succeed, and how to get started.
+## GitHub Pages Deployment
+1. Create a new GitHub repository.
+2. Upload all files from this folder.
+3. Go to **Settings > Pages**.
+4. Under **Build and deployment**, choose:
+   - **Source:** Deploy from a branch
+   - **Branch:** `main`
+   - **Folder:** `/root`
+5. Save and wait for GitHub Pages to publish the site.
 
-All sessions are held **individually via Zoom**. No group sessions are offered.
+## Placeholder items to update later
+- `contact@flawlessimplementation.com`
+- `New York, NY`
 
----
+## Contact form
+The form is front-end only right now. To make it send messages, connect it to:
+- Formspree
+- Netlify Forms
+- EmailJS
+- your own backend
 
-## 💡 Services Offered
+## Image sources used on the page
+The gallery uses Wikimedia Commons image URLs:
+1. Data center server image: https://commons.wikimedia.org/wiki/File:Datacenter_Server_Racks_(22370909788).jpg
+2. Staff meeting image: https://commons.wikimedia.org/wiki/File:Staff_meeting_(2).jpg
+3. Modern office building image: https://commons.wikimedia.org/wiki/File:Modern_office_building,_Theresienh%C3%B6he,_M%C3%BCnchen.jpg
 
-We provide tutoring in all core academic subjects for the following levels:
-
-- **Grades 2–5**: $50/hour  
-- **Grades 6–12**: $60/hour  
-- **College-level subjects**: $70/hour  
-  - (College Algebra, Pre-Calculus, Calculus I & II, Discrete Math, Linear Algebra)
-- **Specialized exam prep**: $75/hour  
-  - (State exams, SAT, SHSAT)
-- **AI training** for any age: $95/hour  
-- **Video lesson library access**: $15/month  
-
----
-
-## 📄 Pages
-
-| Page            | Description                                           |
-|-----------------|-------------------------------------------------------|
-| `index.html`    | Homepage with hero section and CTA                    |
-| `about.html`    | Company mission, background, and strengths            |
-| `services.html` | Subjects offered (core K–College subjects)            |
-| `pricing.html`  | Full breakdown of tutoring prices                     |
-| `booking.html`  | Booking form with contact info                        |
-| `testimonials.html` | Client reviews and testimonials                   |
-| `resources.html`| Study guides, tools, and learning resources           |
-| `contact.html`  | Contact details                                       |
-
----
-
-## 🖼️ Design Goals
-
-- Bold, non-white color scheme for a warm and professional tone  
-- Modern font (Poppins) for readability and friendliness  
-- Fully responsive (works on mobile, tablet, and desktop)  
-- Easy to navigate and optimized for parents and students  
-
----
-
-## 🛠️ How to Run Locally
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/your-repo-name.git
+Please review licensing and attribution requirements before commercial publication.
