@@ -1,30 +1,58 @@
-# Ripa Elevate Academy
+# Ripa Elevate Academy – Tutoring Website
 
-Official website for Ripa Elevate Academy.
+Welcome to the official GitHub repository for **Ripa Elevate Academy**, a one-on-one Zoom-based tutoring service offering personalized academic support from Grades 2 through college.
 
-Ripa Elevate Academy provides personalized tutoring in Math and English for elementary and middle school students. The site includes information about services, scheduling, resources, and diagnostic assessments used to evaluate student progress.
+---
 
-## Website Sections
+## 🌟 About the Project
 
-- Home
-- About
-- Booking
-- Diagnostic Exam
-- Resources
-- Contact
+This website was built to showcase the services, pricing, and booking information for Ripa Elevate Academy. The goal is to provide a **clean, modern, and parent-friendly** platform that clearly explains what we offer, how we help students succeed, and how to get started.
 
-## Purpose
+All sessions are held **individually via Zoom**. No group sessions are offered.
 
-This website helps parents learn about tutoring services, schedule sessions, and access learning resources designed to support student academic growth.
+---
 
-## Built With
+## 💡 Services Offered
 
-- HTML
-- CSS
-- JavaScript
-- GitHub Pages
+We provide tutoring in all core academic subjects for the following levels:
 
-## Author
+- **Grades 2–5**: $50/hour  
+- **Grades 6–12**: $60/hour  
+- **College-level subjects**: $70/hour  
+  - (College Algebra, Pre-Calculus, Calculus I & II, Discrete Math, Linear Algebra)
+- **Specialized exam prep**: $75/hour  
+  - (State exams, SAT, SHSAT)
+- **AI training** for any age: $95/hour  
+- **Video lesson library access**: $15/month  
 
-Brian Ripa
-Founder, Ripa Elevate Academy
+---
+
+## 📄 Pages
+
+| Page            | Description                                           |
+|-----------------|-------------------------------------------------------|
+| `index.html`    | Homepage with hero section and CTA                    |
+| `about.html`    | Company mission, background, and strengths            |
+| `services.html` | Subjects offered (core K–College subjects)            |
+| `pricing.html`  | Full breakdown of tutoring prices                     |
+| `booking.html`  | Booking form with contact info                        |
+| `testimonials.html` | Client reviews and testimonials                   |
+| `resources.html`| Study guides, tools, and learning resources           |
+| `contact.html`  | Contact details                                       |
+
+---
+
+## 🖼️ Design Goals
+
+- Bold, non-white color scheme for a warm and professional tone  
+- Modern font (Poppins) for readability and friendliness  
+- Fully responsive (works on mobile, tablet, and desktop)  
+- Easy to navigate and optimized for parents and students  
+
+---
+
+## 🛠️ How to Run Locally
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/your-repo-name.git
